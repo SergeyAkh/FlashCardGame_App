@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.stream.IntStream;
 
 public class MainActivity extends AppCompatActivity {
-    String sheetID = "1bKL7pCOHBFQTwfaL2Lr9mBMPCNagV16F7VjihIp-tYg";
+    String sheetID = BuildConfig.Sheet_ID;
     String apiKEY = BuildConfig.API_KEY;
     Button main_btn;
     int dictSize = 0;
@@ -69,9 +69,6 @@ public class MainActivity extends AppCompatActivity {
                         listForeignWords.add(strFWord);
                         listNativeWords.add(strNWord);
 
-
-//                        customAdapter = new CustomAdapter(getApplicationContext(), listForeignWords, listNativeWords);
-//                        listView.setAdapter(customAdapter);
                     } catch (Exception e) {
 
                     }
