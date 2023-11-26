@@ -24,7 +24,7 @@ import java.util.stream.IntStream;
 
 public class MainActivity extends AppCompatActivity {
     String sheetID = "1bKL7pCOHBFQTwfaL2Lr9mBMPCNagV16F7VjihIp-tYg";
-    String apiKEY = "AIzaSyAUjnLbohjhk13d_CRwVGuh3aETXSsaugM";
+    String apiKEY = BuildConfig.API_KEY;
     Button main_btn;
     int dictSize = 0;
     String strFWord;
