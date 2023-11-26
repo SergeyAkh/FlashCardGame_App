@@ -31,8 +31,6 @@ public class MainActivity extends AppCompatActivity {
     String strNWord;
     Random rand = new Random();
     JSONArray jsonArray;
-    ListView listView;
-//    CustomAdapter customAdapter;
     ArrayList<String> listForeignWords = new ArrayList<>();
     ArrayList<String> listNativeWords = new ArrayList<>();
     private static TextView twForeignWord;
