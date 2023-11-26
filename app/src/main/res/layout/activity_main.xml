@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/logo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/logo"
+        android:textAlignment="center"
+        android:textColor="@color/textColor"
+        android:textSize="30sp"
+        android:layout_marginTop="50sp"/>
+
+
+
+    <TextView
+        android:id="@+id/foreignWord"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/logo"
+        android:textAlignment="center"
+        android:textColor="@color/textColor"
+        android:textSize="25sp"
+        android:layout_marginTop="150sp"/>
+
+    <EditText
+        android:id="@+id/answer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:layout_below="@id/foreignWord"
+        android:textColor="@color/textColor"
+        android:textColorHint="@color/textColorHint"
+        android:layout_marginTop="50sp"
+        android:layout_marginHorizontal="50sp"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:gravity="center|top"
+        android:inputType="textPersonName"
+        android:hint="@string/hint_user_field"/>
+
+    <Button
+        android:id="@+id/main_btn"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/answer"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50sp"
+        android:layout_marginHorizontal="130sp"
+        android:text="@string/btn_1" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:id="@+id/nativeWord"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/main_btn"
+        android:textAlignment="center"
+        android:textColor="@color/textColor"
+        android:textSize="25sp"
+        android:layout_marginTop="50sp"/>
+
+
+</RelativeLayout>
