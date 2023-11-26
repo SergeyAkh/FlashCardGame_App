@@ -3,5 +3,7 @@
     <string name="logo">Words Game</string>
     <string name="hint_user_field">Type your answer</string>
     <string name="btn_1">Next word</string>
+    <string name="btn_hint">Hint</string>
+    <string name="btn_answer">Answer</string>
     <string name="no_user_input">Enter city name</string>
 </resources>
