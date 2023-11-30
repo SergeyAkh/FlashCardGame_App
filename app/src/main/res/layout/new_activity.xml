@@ -4,15 +4,42 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorPrimaryDark"
     android:layout_height="match_parent">
-
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/viewPager"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true"
-        android:clipToPadding="false"
-        android:foregroundGravity="center"
-        android:overScrollMode="never"
-        />
+        android:orientation="vertical"
+        >
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_centerHorizontal="true"
+            android:clipToPadding="false"
+            android:layout_weight="5"
+            android:foregroundGravity="center"
+            android:overScrollMode="never">
+        </androidx.viewpager.widget.ViewPager>
+        <Button
+            android:id="@+id/btn_hint"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@+id/viewPager"
+            android:background="@drawable/btn"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:text="@string/btn_hint" />
+        <Button
+            android:id="@+id/btn_answer"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@+id/btn_hint"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/btn"
+            android:layout_marginBottom="50dp"
+            android:text="@string/btn_answer" />
+
+    </LinearLayout>
 
 </RelativeLayout>
