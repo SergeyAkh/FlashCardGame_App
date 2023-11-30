@@ -21,7 +21,7 @@ public class AddSheetID extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_sheet_id);
+        setContentView(R.layout.card_item);
         EditText shtID = findViewById(R.id.txtSheetID);
         EditText shtName = findViewById(R.id.txtSheetName);
         Button buttonOK = findViewById(R.id.btnSheetID);
@@ -36,12 +36,10 @@ public class AddSheetID extends AppCompatActivity {
                     for (int i=39; i<=path.length();i++){
                         if (!path.substring(i,i+1).equals("/")) {
                             sheetID = path.substring(39,i+1);
-                            Log.d("mytag",sheetID);
                         }else{
                             break;
                         }
                     }
-                    Log.d("mytag",sheetID);
                     saveData(view.getContext(), sheetID, sheetName);
                     Intent intent = new Intent(AddSheetID.this, MainActivity.class);
                     intent.putExtra("sheetID", sheetID);
