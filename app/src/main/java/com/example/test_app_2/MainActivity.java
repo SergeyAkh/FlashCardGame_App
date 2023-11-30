@@ -3,12 +3,16 @@ package com.example.test_app_2;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,30 +32,43 @@ import java.util.Random;
 import java.util.ArrayList;
 import java.util.stream.IntStream;
 
+
 public class MainActivity extends AppCompatActivity {
+    private static final String SHARED_PREFS = "sharedPrefs";
+    private static final String KEY = "myKey";
+    private static final String KEY_1 = "myKey_1";
     String sheetID = BuildConfig.Sheet_ID;
     String apiKEY = BuildConfig.API_KEY;
+    String sheetName = "Sheet1";
     Button  main_btn2;
     int dictSize = 0, val,wordLength = 0;
-    String strFWord, strNWord, wordHint, urls;
+    String strFWord, strNWord, wordHint, urls,sheetID_1;
     Random rand = new Random();
     JSONArray jsonArray;
     ArrayList<String> listForeignWords = new ArrayList<>();
     ArrayList<String> listNativeWords = new ArrayList<>();
     private static TextView twForeignWord,twNativeWord;
     private static EditText editText;
+
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         main_btn2 = findViewById(R.id.btn_answer2);
         twForeignWord = findViewById(R.id.foreignWord);
         twNativeWord = findViewById(R.id.nativeWord);
         editText = findViewById(R.id.answer);
 
-        String urls ="https://sheets.googleapis.com/v4/spreadsheets/" +sheetID+"/values/Sheet1?key="+apiKEY;
+        sheetID_1 = loadData(this,KEY);
+        String shtName = loadData(this,KEY_1);
+        if (sheetID_1.isEmpty()){
+            Intent intent;
+            intent = new Intent(MainActivity.this, AddSheetID.class);
+            startActivity(intent);
+        }
+
+        urls ="https://sheets.googleapis.com/v4/spreadsheets/" + sheetID_1 +"/values/"+ shtName +"?key="+apiKEY;
         new loadItems().execute();
 
         Drawable drawable = editText.getBackground(); // get current EditText drawable
@@ -104,7 +121,6 @@ public class MainActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
             }
         });
         queue.add(jsonObjectRequest);
@@ -115,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "Type your answer", Toast.LENGTH_LONG).show();}
         else {
             if (listNativeWords.get(val).toString().toUpperCase().equals(editText.getText().toString().toUpperCase().trim())) {
-                Toast.makeText(MainActivity.this, "Wright answer ", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "Wright answer ", Toast.LENGTH_SHORT).show();
                 nextWord(dictSize);
                 wordLength = 0;
                 wordHint = String.valueOf(0);
@@ -136,11 +152,16 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "Whole word is being shown ", Toast.LENGTH_SHORT).show();
         }
     }
+    public static String loadData(Context context,String key) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        String text = sharedPreferences.getString(key, "");
+        return text;
+    }
 
 
     public class loadItems extends AsyncTask<String,String,String> {
-        int dictSize = 0, val,wordLength = 0;
-        String strFWord, strNWord, wordHint, urls;
+        int dictSize = 0, val;
+        String strFWord, strNWord, urls;
         Random rand = new Random();
         JSONArray jsonArray;
         ArrayList<String> listForeignWords = new ArrayList<>();
