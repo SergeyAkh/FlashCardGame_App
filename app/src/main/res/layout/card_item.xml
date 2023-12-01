@@ -10,14 +10,16 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
         android:background="@color/white"
+        app:cardBackgroundColor="#8C7DFF"
         app:cardCornerRadius="30dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:background="@drawable/frame"
+            android:layout_height="500dp"
+
 
             android:orientation="vertical">
 
@@ -26,29 +28,61 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="2"
-                android:text="Test"
-                android:textSize="35sp"
+                android:text="Please paste coped your spreadsheet url and \n Sheet Name"
+                android:textSize="25sp"
+                android:fontFamily="@font/mabry"
                 android:gravity="center"
-                android:textColor="@color/white" />
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                />
 
             <EditText
-                android:id="@+id/answer"
+                android:id="@+id/txtSheetID"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:textSize="20sp"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                android:fontFamily="@font/mabry"
                 android:gravity="center"
                 android:layout_weight="1"
-                android:hint="Type your answer"
+                android:hint="URL"
+                android:textColor="@color/white" />
+            <EditText
+                android:id="@+id/txtSheetName"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                android:fontFamily="@font/mabry"
+                android:textSize="20sp"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:hint="Sheet Name"
                 android:textColor="@color/white" />
 
-            <TextView
+            <LinearLayout
                 android:id="@+id/nativeWord"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:gravity="center"
                 android:textSize="20sp"
                 android:layout_weight="1"
-                android:textColor="@color/white" />
+                android:orientation="horizontal"
+                android:textColor="@color/white">
+                <Button
+
+                    android:layout_width="wrap_content"
+                    android:id="@+id/btnSheetID"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/mabry"
+                    android:background="@drawable/btn"
+                    android:text="OK"
+                    >
+
+                </Button>
+
+            </LinearLayout>
 
 
         </LinearLayout>
