@@ -10,14 +10,17 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
         android:background="@color/white"
+        app:cardBackgroundColor="#8C7DFF"
         app:cardCornerRadius="30dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="500dp"
-            android:background="@drawable/frame"
+
+
             android:orientation="vertical">
 
             <TextView
@@ -27,6 +30,7 @@
                 android:layout_weight="2"
                 android:text="Please paste coped your spreadsheet url and \n Sheet Name"
                 android:textSize="25sp"
+                android:fontFamily="@font/mabry"
                 android:gravity="center"
                 android:textColor="@color/black"
                 android:textStyle="bold"
@@ -39,6 +43,7 @@
                 android:textSize="20sp"
                 android:layout_marginRight="20dp"
                 android:layout_marginLeft="20dp"
+                android:fontFamily="@font/mabry"
                 android:gravity="center"
                 android:layout_weight="1"
                 android:hint="URL"
@@ -49,6 +54,7 @@
                 android:layout_height="0dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginLeft="20dp"
+                android:fontFamily="@font/mabry"
                 android:textSize="20sp"
                 android:gravity="center"
                 android:layout_weight="1"
@@ -69,6 +75,7 @@
                     android:layout_width="wrap_content"
                     android:id="@+id/btnSheetID"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/mabry"
                     android:background="@drawable/btn"
                     android:text="OK"
                     >
