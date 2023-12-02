@@ -28,9 +28,16 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
 import java.util.Random;
 import java.util.ArrayList;
 import java.util.stream.IntStream;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -68,62 +75,74 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }
 
-        urls ="https://sheets.googleapis.com/v4/spreadsheets/" + sheetID_1 +"/values/"+ shtName +"?key="+apiKEY;
-        new loadItems().execute();
+        // Check Internet connection
 
-        Drawable drawable = editText.getBackground(); // get current EditText drawable
-        drawable.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP); // change the drawable color
+        ConnectivityManager cm = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
 
-        if (Build.VERSION.SDK_INT > 16) {
-            editText.setBackground(drawable); // set the new drawable to EditText
-        } else {
-            editText.setBackgroundDrawable(drawable); // use setBackgroundDrawable because setBackground required API 16
-        }
-        main_btn2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                doAnswerAction();
+        if (isConnected) {
+            urls ="https://sheets.googleapis.com/v4/spreadsheets/" + sheetID_1 +"/values/"+ shtName +"?key="+apiKEY;
+
+            Drawable drawable = editText.getBackground(); // get current EditText drawable
+            drawable.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP); // change the drawable color
+
+            if (Build.VERSION.SDK_INT > 16) {
+                editText.setBackground(drawable); // set the new drawable to EditText
+            } else {
+                editText.setBackgroundDrawable(drawable); // use setBackgroundDrawable because setBackground required API 16
             }
-        });
-
-        twNativeWord.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                doHintAction();
-            }
-        });
-
-        RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, urls, null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    jsonArray = response.getJSONArray("values");
-                } catch (Exception e) {
+            main_btn2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    doAnswerAction();
                 }
-                IntStream.range(1, jsonArray.length()).forEach(i -> {
+            });
+
+            twNativeWord.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    doHintAction();
+                }
+            });
+
+            RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, urls, null, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
                     try {
-                        JSONArray json = jsonArray.getJSONArray(i);
-                        strFWord = json.getString(0);
-                        strNWord = json.getString(1);
-                        listForeignWords.add(strFWord);
-                        listNativeWords.add(strNWord);
+                        jsonArray = response.getJSONArray("values");
                     } catch (Exception e) {
-
                     }
-                });
-                dictSize = listForeignWords.size();
-                val = getInt(dictSize);
-                twForeignWord.setText(listForeignWords.get(val));
-//                twNativeWord.setText(listNativeWords.get(val));
-            }
+                    IntStream.range(1, jsonArray.length()).forEach(i -> {
+                        try {
+                            JSONArray json = jsonArray.getJSONArray(i);
+                            strFWord = json.getString(0);
+                            strNWord = json.getString(1);
+                            listForeignWords.add(strFWord);
+                            listNativeWords.add(strNWord);
+                        } catch (Exception e) {
 
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-            }
-        });
-        queue.add(jsonObjectRequest);
+                        }
+                    });
+                    dictSize = listForeignWords.size();
+                    val = getInt(dictSize);
+                    twForeignWord.setText(listForeignWords.get(val));
+//                twNativeWord.setText(listNativeWords.get(val));
+                }
+
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                }
+            });
+            queue.add(jsonObjectRequest);
+        } else {
+
+            // No Internet connection
+            Toast.makeText(MainActivity.this, "Check Internet connection", Toast.LENGTH_LONG).show();
+
+        }
 
     }
     private void doAnswerAction() {
@@ -157,51 +176,35 @@ public class MainActivity extends AppCompatActivity {
         String text = sharedPreferences.getString(key, "");
         return text;
     }
+    public void setHighScore(float highscore){
+        FileOutputStream outputStream = null;
+        try {
+            outputStream = (this).openFileOutput("highscore", Context.MODE_PRIVATE);
 
+            outputStream.write(Float.toString(highscore).getBytes());
+            outputStream.close();
 
-    public class loadItems extends AsyncTask<String,String,String> {
-        int dictSize = 0, val;
-        String strFWord, strNWord, urls;
-        Random rand = new Random();
-        JSONArray jsonArray;
-        ArrayList<String> listForeignWords = new ArrayList<>();
-        ArrayList<String> listNativeWords = new ArrayList<>();
-        protected String doInBackground(String... args){
-            RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, urls, null, new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    try {
-                        jsonArray = response.getJSONArray("values");
-                    } catch (Exception e) {
-                    }
-                    IntStream.range(1, jsonArray.length()).forEach(i -> {
-                        try {
-                            JSONArray json = jsonArray.getJSONArray(i);
-                            strFWord = json.getString(0);
-                            strNWord = json.getString(1);
-                            listForeignWords.add(strFWord);
-                            listNativeWords.add(strNWord);
-                        } catch (Exception e) {
-
-                        }
-                    });
-                    dictSize = listForeignWords.size();
-                    val = getInt(dictSize);
-                    twForeignWord.setText(listForeignWords.get(val));
-                }
-
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-
-                }
-            });
-            queue.add(jsonObjectRequest);
-            return null;
-        }
-
+        } catch (Exception e) {e.printStackTrace();}
     }
+    public float getHighScore(){
+        ArrayList<String> text = new ArrayList<String>();
+
+        FileInputStream inputStream;
+        try {
+            inputStream = (this).openFileInput("highscore");
+
+            InputStreamReader isr = new InputStreamReader(inputStream);
+            BufferedReader bufferedReader = new BufferedReader(isr);
+
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                text.add(line);
+            }
+            bufferedReader.close();
+        } catch (Exception e) { e.printStackTrace();}
+        return Float.parseFloat(text.get(1));
+    }
+
 //    public void loadCards(int dictSize){
 //        modelArrayList = new ArrayList<>();
 //        Log.d("My tag load",String.valueOf(listForeignWords));
