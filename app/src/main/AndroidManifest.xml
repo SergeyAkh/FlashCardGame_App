@@ -18,6 +18,9 @@
         android:theme="@style/Theme.MaterialComponents.NoActionBar"
         tools:targetApi="31">
         <activity
+            android:name=".AddWords"
+            android:exported="false" />
+        <activity
             android:name=".AddSheetID"
             android:exported="false" />
         <activity

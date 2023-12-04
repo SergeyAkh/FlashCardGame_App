@@ -2,6 +2,7 @@ package com.example.test_app_2;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -40,7 +41,7 @@ public class AddSheetID extends AppCompatActivity {
                             break;
                         }
                     }
-                    saveData(view.getContext(), sheetID, sheetName);
+                    saveSheetIDAndName(view.getContext(), sheetID, sheetName);
                     Intent intent = new Intent(AddSheetID.this, MainActivity.class);
                     intent.putExtra("sheetID", sheetID);
                     intent.putExtra("sheetName", sheetName);
@@ -50,7 +51,7 @@ public class AddSheetID extends AppCompatActivity {
             }
         });
     }
-    public static void saveData(Context context,String text,String text_2) {
+    public static void saveSheetIDAndName(Context context,String text,String text_2) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(KEY, text);
