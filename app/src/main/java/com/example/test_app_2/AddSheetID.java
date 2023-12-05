@@ -34,6 +34,7 @@ public class AddSheetID extends AppCompatActivity {
                 if (path.isEmpty()|sheetName.isEmpty()){
                     Toast.makeText(view.getContext(), "Please enter ID of Sheet and Name", Toast.LENGTH_LONG).show();
                 } else {
+                    //loop for looking last "/" and therefore allocate SheetID
                     for (int i=39; i<=path.length();i++){
                         if (!path.substring(i,i+1).equals("/")) {
                             sheetID = path.substring(39,i+1);
@@ -43,8 +44,8 @@ public class AddSheetID extends AppCompatActivity {
                     }
                     saveSheetIDAndName(view.getContext(), sheetID, sheetName);
                     Intent intent = new Intent(AddSheetID.this, MainActivity.class);
-                    intent.putExtra("sheetID", sheetID);
-                    intent.putExtra("sheetName", sheetName);
+//                    intent.putExtra("sheetID", sheetID);
+//                    intent.putExtra("sheetName", sheetName);
                     startActivity(intent);
                     finishAndRemoveTask();
                 }

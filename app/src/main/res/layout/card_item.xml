@@ -19,8 +19,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="500dp"
-
-
             android:orientation="vertical">
 
             <TextView
@@ -47,7 +45,7 @@
                 android:gravity="center"
                 android:layout_weight="1"
                 android:hint="URL"
-                android:textColor="@color/white" />
+                android:textColor="@color/black" />
             <EditText
                 android:id="@+id/txtSheetName"
                 android:layout_width="match_parent"
@@ -59,7 +57,7 @@
                 android:gravity="center"
                 android:layout_weight="1"
                 android:hint="Sheet Name"
-                android:textColor="@color/white" />
+                android:textColor="@color/black" />
 
             <LinearLayout
                 android:id="@+id/nativeWord"
