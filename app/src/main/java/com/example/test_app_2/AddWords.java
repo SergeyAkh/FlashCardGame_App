@@ -40,6 +40,10 @@ public class AddWords extends AppCompatActivity {
             public void onClick(View view) {
                 forWordToSend = foreignNewWord.getText().toString().trim();
                 netWordToSend = nativeNewWord.getText().toString().trim();
+                Log.d("my tag", sheetID_1);
+                Log.d("my tag", shtName);
+                Log.d("my tag", forWordToSend);
+
                 new SendRequest().execute();
                 foreignNewWord.setText("");
                 nativeNewWord.setText("");
@@ -54,8 +58,9 @@ public class AddWords extends AppCompatActivity {
         protected String doInBackground(String... arg0) {
 
             try{
-                URL url = new URL("https://script.google.com/macros/s/AKfycbyAbd-y5dorC8UY3B8k4ekNz0TO3vDrZ_TG0wmOAigmTaPLgnxs3cbRHpdExHTYDdKp/exec");
-                // https://script.google.com/macros/s/AKfycbyuAu6jWNYMiWt9X5yp63-hypxQPlg5JS8NimN6GEGmdKZcIFh0/exec
+                URL url = new URL("https://script.google.com/macros/s/AKfycbzce7xtR81IWeqeqpwkaR10yT2-z15EULshvmt2rnFltr-8OKdjJ9JdfCznLra_nafp/exec");
+
+                // https://script.google.com/macros/s/AKfycbxvoDuDu4-fahWIfEmpHXSN3Rh-l4juh7faGXYXEO7tpkI7zEBZHHPqIJDsGBaiOtMIqg/exec
                 JSONObject postDataParams = new JSONObject();
 
                 postDataParams.put("foreignWord",forWordToSend);

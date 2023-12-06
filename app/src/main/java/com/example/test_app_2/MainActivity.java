@@ -28,6 +28,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.Random;
 import java.util.ArrayList;
@@ -43,10 +44,13 @@ public class MainActivity extends AppCompatActivity {
     String sheetName = "Sheet1";
     Button  main_btn2;
     ImageButton btnNewWords;
-    int dictSize = 0, val,wordLength = 0;
+    int dictSize = 0, val,wordLength = 0,countAppearance,countRightAnswers;
     String strFWord, strNWord, wordHint, urls,sheetID_1;
     Random rand = new Random();
     JSONArray jsonArray;
+    ArrayList<Float> listWightedProb = new ArrayList<Float>();
+    ArrayList<Integer> listCountAppearance = new ArrayList<Integer>();
+    ArrayList<Integer> listCountRightAnswers = new ArrayList<Integer>();
     ArrayList<String> listForeignWords = new ArrayList<>();
     ArrayList<String> listNativeWords = new ArrayList<>();
     private static TextView twForeignWord,twNativeWord;
@@ -71,7 +75,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         urls ="https://sheets.googleapis.com/v4/spreadsheets/" + sheetID_1 +"/values/"+ shtName +"?key="+apiKEY;
-        new loadItems().execute();
 
         Drawable drawable = editText.getBackground(); // get current EditText drawable
         drawable.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP); // change the drawable color
@@ -102,45 +105,22 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, urls, null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    jsonArray = response.getJSONArray("values");
-                } catch (Exception e) {
-                }
-                IntStream.range(1, jsonArray.length()).forEach(i -> {
-                    try {
-                        JSONArray json = jsonArray.getJSONArray(i);
-                        strFWord = json.getString(0);
-                        strNWord = json.getString(1);
-                        listForeignWords.add(strFWord);
-                        listNativeWords.add(strNWord);
-                    } catch (Exception e) {
-
-                    }
-                });
-                dictSize = listForeignWords.size();
-                val = getInt(dictSize);
-                twForeignWord.setText(listForeignWords.get(val));
-//                twNativeWord.setText(listNativeWords.get(val));
-            }
-
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-            }
-        });
-        queue.add(jsonObjectRequest);
-
+        new GetData().execute();
     }
     private void doAnswerAction() {
         if(editText.getText().toString().trim().equals("")){
             Toast.makeText(MainActivity.this, "Type your answer", Toast.LENGTH_LONG).show();}
         else {
-            if (listNativeWords.get(val).toString().toUpperCase().equals(editText.getText().toString().toUpperCase().trim())) {
+            boolean checkAnswer = listNativeWords.get(val).toString().toUpperCase().equals(editText.getText().toString().toUpperCase().trim());
+            if (checkAnswer & wordLength==0) {
+                //Right answer without hints, add 1 to array of right answers
+                Toast.makeText(MainActivity.this, "Wright answer ", Toast.LENGTH_SHORT).show();
+                nextWord(dictSize);
+                twNativeWord.setText("");
+                editText.getText().clear();
+                listCountRightAnswers.set(val,listCountRightAnswers.get(val)+1);
+            } else if (checkAnswer & wordLength>0) {
+                //Wright answer, but with hint
                 Toast.makeText(MainActivity.this, "Wright answer ", Toast.LENGTH_SHORT).show();
                 nextWord(dictSize);
                 wordLength = 0;
@@ -148,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
                 twNativeWord.setText("");
                 editText.getText().clear();
             } else {
+                //Wrong answer
                 Toast.makeText(MainActivity.this, "Wrong answer ", Toast.LENGTH_SHORT).show();
             }
         }
@@ -168,61 +149,83 @@ public class MainActivity extends AppCompatActivity {
         return text;
     }
 
+    public int getInt(int size){
+        return rand.nextInt(size);
+    }
+    public float calc(int size){
+        for (int i=0;i<size;i++){
+            double y = listCountAppearance.get(i) + listCountRightAnswers.get(i) + 1;
+            listWightedProb.set(i, (float) Math.pow(y,-1));
+        }
+        Float max = listWightedProb.get(0);
+        int num = 0;
+        for (int i = 1; i < size; i++)
+            if (listWightedProb.get(i) > max)
+                num = i;
+        return num;
+    }
 
-    public class loadItems extends AsyncTask<String,String,String> {
-        int dictSize = 0, val;
-        String strFWord, strNWord, urls;
-        Random rand = new Random();
-        JSONArray jsonArray;
-        ArrayList<String> listForeignWords = new ArrayList<>();
-        ArrayList<String> listNativeWords = new ArrayList<>();
-        protected String doInBackground(String... args){
+    public void nextWord(int dictSize){
+        val = getInt(dictSize);
+        twForeignWord.setText(listForeignWords.get(val));
+        listCountAppearance.set(val,listCountAppearance.get(val)+1);
+//        long intSum = listCountRightAnswers.stream()
+//                .mapToLong(Integer::longValue)
+//                .sum();
+//        Log.d("my tag", String.valueOf(intSum));
+    }
+
+
+    public class GetData extends AsyncTask<String, Void, String >{
+
+        @Override
+        protected String doInBackground(String... strings) {
             RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, urls, null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-                    try {
-                        jsonArray = response.getJSONArray("values");
-                    } catch (Exception e) {
-                    }
-                    IntStream.range(1, jsonArray.length()).forEach(i -> {
+                    jsonArray = response.optJSONArray("values");
+                    int len = jsonArray.length();
+
+                    for (int i = 1;i < len; i++){
                         try {
-                            JSONArray json = jsonArray.getJSONArray(i);
+                            JSONArray json = jsonArray.optJSONArray(i);
                             strFWord = json.getString(0);
                             strNWord = json.getString(1);
+                            try {
+                                countAppearance = json.getInt(2);
+                            } catch (Exception e){
+                                countAppearance = 0;
+                            }
+                            try {
+                                countRightAnswers = json.getInt(3);
+                            }catch (Exception e){
+                                countRightAnswers = 0;
+                            }
+                            listCountAppearance.add(countAppearance);
+                            listCountRightAnswers.add(countRightAnswers);
                             listForeignWords.add(strFWord);
                             listNativeWords.add(strNWord);
-                        } catch (Exception e) {
 
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
                         }
-                    });
+                    }
+
                     dictSize = listForeignWords.size();
                     val = getInt(dictSize);
                     twForeignWord.setText(listForeignWords.get(val));
+                    listCountAppearance.set(val,listCountAppearance.get(val)+1);
                 }
 
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-
                 }
             });
             queue.add(jsonObjectRequest);
             return null;
         }
+    }
 
-    }
-    //    public void loadCards(int dictSize){
-//        modelArrayList = new ArrayList<>();
-//        Log.d("My tag load",String.valueOf(listForeignWords));
-//        modelArrayList.add(new MyModel("kajha","aavuv"));
-//        modelArrayList.add(new MyModel("arbab","rebart"));
-//    }
-    public int getInt(int size){
-        return rand.nextInt(size);
-    }
-    public void nextWord(int dictSize){
-        val = getInt(dictSize);
-        twForeignWord.setText(listForeignWords.get(val));
-    }
 }
