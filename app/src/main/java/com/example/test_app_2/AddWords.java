@@ -57,7 +57,6 @@ public class AddWords extends AppCompatActivity {
                 onBackPressed();
             }
         });
-
     }
     public class SendRequest extends AsyncTask<String, Void, String> {
 
@@ -66,7 +65,6 @@ public class AddWords extends AppCompatActivity {
 
             try{
                 URL url = new URL("https://script.google.com/macros/s/AKfycbz05Dbq22BzdCaKPavv4d2Z-CZQhV0i3lkToFp8If-OuO-A1NRs05t5bPH6DZSvpEqu/exec");
-
                 // https://script.google.com/macros/s/AKfycbxvoDuDu4-fahWIfEmpHXSN3Rh-l4juh7faGXYXEO7tpkI7zEBZHHPqIJDsGBaiOtMIqg/exec
                 JSONObject postDataParams = new JSONObject();
 

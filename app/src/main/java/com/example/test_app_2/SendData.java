@@ -3,7 +3,7 @@ package com.example.test_app_2;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
+
 import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -20,7 +20,10 @@ import javax.net.ssl.HttpsURLConnection;
 public class SendData extends AsyncTask<String, Void, String> {
     private static final String KEY = "myKey";
     private static final String KEY_1 = "myKey_1";
-    private Context context;
+    Context context;
+    void Helper(Context ctx){
+        this.context = ctx;
+    }
     String sheetID_1, shtName;
     MainActivity frame = new MainActivity();
     int col = frame.col;

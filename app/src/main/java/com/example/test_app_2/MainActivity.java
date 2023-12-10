@@ -56,14 +56,14 @@ public class MainActivity extends AppCompatActivity {
     Button  main_btn2;
     public int foreignDict = 0;
     public int nativeDict = (foreignDict - 1)*(-1);
-    ImageButton btnNewWords;
+    ImageButton btnNewWords,switchLang;
     int dictSize = 0, val,wordLength = 0,countAppearance,countRightAnswers, col, row, value,value_sum;
-    public String strFWord, strNWord, wordHint, urls,sheetID_1,shtName;
+    public String strFWord, strNWord, wordHint, urls,sheetID_1,shtName, langNameFor, langNameNat;
     Random rand = new Random();
     JSONArray jsonArray;
     List<List<String>> listOfListsOfLists =new ArrayList<List<String>>();
     ArrayList<Integer> listMintedProb = new ArrayList<Integer>();
-    private static TextView twForeignWord,twNativeWord;
+    private static TextView twForeignWord,twNativeWord,twTextForeign,twTextNative;
     private static EditText editText;
 
     @SuppressLint("MissingInflatedId")
@@ -72,8 +72,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         main_btn2 = findViewById(R.id.btn_answer2);
+        switchLang = findViewById(R.id.switchLang);
         twForeignWord = findViewById(R.id.foreignWord);
         twNativeWord = findViewById(R.id.nativeWord);
+        twTextForeign = findViewById(R.id.textForeign);
+        twTextNative = findViewById(R.id.textNative);
         editText = findViewById(R.id.answer);
         btnNewWords = findViewById(R.id.newWordsBtn);
         sheetID_1 = loadData(this,KEY);
@@ -100,7 +103,12 @@ public class MainActivity extends AppCompatActivity {
                 doAnswerAction();
             }
         });
-
+        switchLang.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                switchLan();
+            }
+        });
         twNativeWord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -115,9 +123,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        Log.d("my tag_", "here");
         new GetData().execute();
-        Log.d("my tag_after", "here");
     }
     private void doAnswerAction() {
         if(editText.getText().toString().trim().equals("")){
@@ -261,6 +267,8 @@ public class MainActivity extends AppCompatActivity {
                             throw new RuntimeException(e);
                         }
                     }
+                    twTextForeign.setText(listOfListsOfLists.get(0).get(0));
+                    twTextNative.setText(listOfListsOfLists.get(0).get(1));
                     listOfListsOfLists.remove(0);
                     dictSize = listOfListsOfLists.size();
                     nextWord(dictSize);
@@ -278,6 +286,7 @@ public class MainActivity extends AppCompatActivity {
         this.row = row+2;
         this.col = col;
         this.value = value_new;
+//        new SendData().execute();
         new SendMyData().execute();
     }
     public class SendMyData extends AsyncTask<String, Void, String> {
@@ -368,5 +377,8 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
-
+    public void switchLan(){
+        foreignDict = (foreignDict -1)*(-1);
+        nextWord(dictSize);
+    }
 }
