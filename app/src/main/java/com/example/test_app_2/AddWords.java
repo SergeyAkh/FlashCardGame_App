@@ -1,12 +1,16 @@
 package com.example.test_app_2;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.view.View;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import org.json.JSONObject;
 import java.io.BufferedReader;
@@ -25,6 +29,8 @@ public class AddWords extends AppCompatActivity {
     private static final String KEY_1 = "myKey_1";
     String sheetID_1, shtName, forWordToSend, netWordToSend;
     EditText foreignNewWord, nativeNewWord;
+    ImageButton backToMain;
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,23 +38,24 @@ public class AddWords extends AppCompatActivity {
         sheetID_1 = MainActivity.loadData(this,KEY);
         shtName = MainActivity.loadData(this,KEY_1);
         Button submit = findViewById(R.id.submitNewWords);
+        backToMain = findViewById(R.id.goBack);
         foreignNewWord = findViewById(R.id.newForeignWord);
         nativeNewWord = findViewById(R.id.newNativeWord);
-
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 forWordToSend = foreignNewWord.getText().toString().trim();
                 netWordToSend = nativeNewWord.getText().toString().trim();
-                Log.d("my tag", sheetID_1);
-                Log.d("my tag", shtName);
-                Log.d("my tag", forWordToSend);
-
                 new SendRequest().execute();
                 foreignNewWord.setText("");
                 nativeNewWord.setText("");
             }
-
+        });
+        backToMain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
         });
 
     }
@@ -58,7 +65,7 @@ public class AddWords extends AppCompatActivity {
         protected String doInBackground(String... arg0) {
 
             try{
-                URL url = new URL("https://script.google.com/macros/s/AKfycbzce7xtR81IWeqeqpwkaR10yT2-z15EULshvmt2rnFltr-8OKdjJ9JdfCznLra_nafp/exec");
+                URL url = new URL("https://script.google.com/macros/s/AKfycbz05Dbq22BzdCaKPavv4d2Z-CZQhV0i3lkToFp8If-OuO-A1NRs05t5bPH6DZSvpEqu/exec");
 
                 // https://script.google.com/macros/s/AKfycbxvoDuDu4-fahWIfEmpHXSN3Rh-l4juh7faGXYXEO7tpkI7zEBZHHPqIJDsGBaiOtMIqg/exec
                 JSONObject postDataParams = new JSONObject();

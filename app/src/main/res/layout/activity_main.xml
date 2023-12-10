@@ -4,18 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black">
-
     <LinearLayout
         android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1">
-
+            android:layout_weight="0.7">
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -25,10 +22,8 @@
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 android:textSize="40sp">
-
             </TextView>
         </LinearLayout>
-
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -37,12 +32,10 @@
             android:layout_weight="3"
             app:cardBackgroundColor="#B87EED"
             app:cardCornerRadius="30dp">
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
-
                 <TextView
                     android:id="@+id/foreignWord"
                     android:layout_width="match_parent"
@@ -54,20 +47,17 @@
                     android:textColor="@color/black"
                     android:textSize="40sp"
                     android:textStyle="bold" />
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:orientation="horizontal">
-
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="50dp"
                         android:layout_weight="1"
                         android:orientation="vertical">
-
                         <EditText
                             android:id="@+id/answer"
                             android:layout_width="match_parent"
@@ -79,10 +69,7 @@
                             android:hint="Type your answer"
                             android:textColor="@color/black"
                             android:textSize="20sp" />
-
-
                     </LinearLayout>
-
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -103,13 +90,9 @@
                                 android:background="@drawable/baseline_send_24"
                                 android:backgroundTint="@color/white"
                                 />
-
                         </LinearLayout>
-
                     </LinearLayout>
-
                 </LinearLayout>
-
                 <TextView
                     android:id="@+id/nativeWord"
                     android:layout_width="match_parent"
@@ -122,28 +105,22 @@
                     android:textColor="@color/black"
                     android:textColorHighlight="@color/white"
                     android:textSize="20sp"
-                    android:textStyle="bold" />
-
-
+                    android:textStyle="bold">
+                </TextView>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
-
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="0.5"
             android:layout_gravity="center"
             android:layout_marginTop="15dp"
-
             >
             <ImageButton
                 android:layout_width="50dp"
                 android:id="@+id/newWordsBtn"
                 android:layout_height="50dp"
                 android:background="@drawable/baseline_add_circle_outline_24" />
-
         </LinearLayout>
-
     </LinearLayout>
-
 </RelativeLayout>
