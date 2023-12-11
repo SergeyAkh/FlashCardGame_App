@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
     JSONArray jsonArray;
     List<List<String>> listOfListsOfLists =new ArrayList<List<String>>();
     ArrayList<Integer> listMintedProb = new ArrayList<Integer>();
+    ArrayList<String> listLangNames = new ArrayList<>();
     private static TextView twForeignWord,twNativeWord,twTextForeign,twTextNative;
     private static EditText editText;
 
@@ -138,19 +139,11 @@ public class MainActivity extends AppCompatActivity {
                 listOfListsOfLists.get(val).set(3, String.valueOf(value));
                 listOfListsOfLists.get(val).set(4, String.valueOf(value_sum));
                 sendData(val,4,value);
-                twNativeWord.setText("");
-                editText.getText().clear();
-                wordLength = 0;
                 nextWord(dictSize);
-
             } else if (checkAnswer & wordLength>1) {
                 //Wright answer, but with hint
                 Toast.makeText(MainActivity.this, "Wright answer ", Toast.LENGTH_SHORT).show();
                 nextWord(dictSize);
-                wordLength = 0;
-                wordHint = String.valueOf(0);
-                twNativeWord.setText("");
-                editText.getText().clear();
             } else {
                 //Wrong answer
                 Toast.makeText(MainActivity.this, "Wrong answer ", Toast.LENGTH_SHORT).show();
@@ -210,6 +203,10 @@ public class MainActivity extends AppCompatActivity {
     public void nextWord(int dictSize){
 //        val = getInt(dictSize);
         val = calc(dictSize);
+        twNativeWord.setText("");
+        editText.getText().clear();
+        wordHint = String.valueOf(0);
+        wordLength = 0;
         twForeignWord.setText(listOfListsOfLists.get(val).get(foreignDict));
         value = Integer.parseInt(listOfListsOfLists.get(val).get(2))+1;
         value_sum = Integer.parseInt(listOfListsOfLists.get(val).get(4))+1;
@@ -256,10 +253,7 @@ public class MainActivity extends AppCompatActivity {
                             listOfStrings.add(String.valueOf(countAppearance));
                             listOfStrings.add(String.valueOf(countRightAnswers));
                             listOfStrings.add(String.valueOf(value));
-//                            listCountAppearance.add(countAppearance);
-//                            listCountRightAnswers.add(countRightAnswers);
-//                            listForeignWords.add(strFWord);
-//                            listNativeWords.add(strNWord);
+
                             listOfListsOfLists.add(listOfStrings);
 
 
@@ -267,11 +261,14 @@ public class MainActivity extends AppCompatActivity {
                             throw new RuntimeException(e);
                         }
                     }
-                    twTextForeign.setText(listOfListsOfLists.get(0).get(0));
-                    twTextNative.setText(listOfListsOfLists.get(0).get(1));
+                    listLangNames.add(listOfListsOfLists.get(0).get(0));
+                    listLangNames.add(listOfListsOfLists.get(0).get(1));
                     listOfListsOfLists.remove(0);
                     dictSize = listOfListsOfLists.size();
+                    twTextForeign.setText(listLangNames.get(foreignDict));
+                    twTextNative.setText(listLangNames.get(nativeDict));
                     nextWord(dictSize);
+
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -379,6 +376,9 @@ public class MainActivity extends AppCompatActivity {
     }
     public void switchLan(){
         foreignDict = (foreignDict -1)*(-1);
+        nativeDict = (foreignDict - 1)*(-1);
+        twTextForeign.setText(listLangNames.get(foreignDict));
+        twTextNative.setText(listLangNames.get(nativeDict));
         nextWord(dictSize);
     }
 }

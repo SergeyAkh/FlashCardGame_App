@@ -54,7 +54,10 @@ public class AddWords extends AppCompatActivity {
         backToMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                Intent intent;
+                intent = new Intent(AddWords.this, MainActivity.class);
+                startActivity(intent);
+//                onBackPressed();
             }
         });
     }
