@@ -44,8 +44,6 @@ public class AddSheetID extends AppCompatActivity {
                     }
                     saveSheetIDAndName(view.getContext(), sheetID, sheetName);
                     Intent intent = new Intent(AddSheetID.this, MainActivity.class);
-//                    intent.putExtra("sheetID", sheetID);
-//                    intent.putExtra("sheetName", sheetName);
                     startActivity(intent);
                     finishAndRemoveTask();
                 }

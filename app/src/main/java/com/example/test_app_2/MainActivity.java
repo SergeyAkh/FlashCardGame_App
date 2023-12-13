@@ -1,11 +1,9 @@
 package com.example.test_app_2;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
@@ -18,10 +16,13 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,13 +57,13 @@ public class MainActivity extends AppCompatActivity {
     private static final String SHARED_PREFS = "sharedPrefs";
     private static final String KEY = "myKey";
     private static final String KEY_1 = "myKey_1";
+    private static final String KEY_lang = "foreign_lang";
     public String sheetID = BuildConfig.Sheet_ID;
     String apiKEY = BuildConfig.API_KEY;
     Button main_btn2;
-    public int foreignDict = 0;
-    public int nativeDict = (foreignDict - 1) * (-1);
-    ImageButton btnNewWords, switchLang;
-    int dictSize = 0, val, wordLength = 0, countAppearance, countRightAnswers, col, row, value, value_sum, countPressForExit = 0;
+    boolean internetConnection;
+    ImageButton switchLang, btnMenu,nxtWord;
+    int dictSize = 0, val, wordLength = 0, countAppearance, countRightAnswers, col, row, value, value_sum, langValue;
     public String strFWord, strNWord, wordHint, urls, sheetID_1, shtName;
     Random rand = new Random();
     JSONArray jsonArray;
@@ -71,6 +72,9 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> listLangNames = new ArrayList<>();
     private static TextView twForeignWord, twNativeWord, twTextForeign, twTextNative;
     private static EditText editText;
+    boolean nextWordPressed = false;
+    int foreignDict = 0;
+    int nativeDict = (foreignDict - 1) * (-1);
 //    @Override
 //    protected void onSaveInstanceState(Bundle outState) {
 //        super.onSaveInstanceState(outState);
@@ -81,26 +85,30 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        if (savedInstanceState != null) {
-//            mCounter = savedInstanceState.getInt(STATE_COUNTER, 0);
-//        } else{
-//
-//        }
         setContentView(R.layout.activity_main);
+
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         main_btn2 = findViewById(R.id.btn_answer2);
         switchLang = findViewById(R.id.switchLang);
+        btnMenu = findViewById(R.id.btnMenu);
         twForeignWord = findViewById(R.id.foreignWord);
+        nxtWord = findViewById(R.id.btnNextWord);
         twNativeWord = findViewById(R.id.nativeWord);
         twTextForeign = findViewById(R.id.textForeign);
         twTextNative = findViewById(R.id.textNative);
         editText = findViewById(R.id.answer);
-        btnNewWords = findViewById(R.id.newWordsBtn);
         sheetID_1 = loadData(this, KEY);
+        try {
+            langValue = loadData_lang(MainActivity.this, KEY_lang);
+            Log.d("my tag", String.valueOf(langValue));
+            foreignDict = langValue;
+            nativeDict = (foreignDict - 1) * (-1);
+        } catch (Exception e){
 
-//        sheetID_1 = sheetID;
+        }
         shtName = loadData(this, KEY_1);
         //Add first run SheetID and SheetName
+        Log.d("my tag", "here "+haveNetworkConnection());
         if (sheetID_1.isEmpty()) {
             Intent intent;
             intent = new Intent(MainActivity.this, AddSheetID.class);
@@ -115,6 +123,43 @@ public class MainActivity extends AppCompatActivity {
         } else {
             editText.setBackgroundDrawable(drawable); // use setBackgroundDrawable because setBackground required API 16
         }
+        nxtWord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                nextWordPressed = true;
+                nextWord(dictSize);
+                nextWordPressed = false;
+            }
+        });
+        btnMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PopupMenu popup = new PopupMenu(MainActivity.this, btnMenu);
+                popup.getMenuInflater().inflate(R.menu.menu,popup.getMenu());
+
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        int id = menuItem.getItemId();
+                        if (id == R.id.addNewWord){
+                            if (!haveNetworkConnection()){
+                                showToast();
+                            } else {
+                                Intent intent;
+                                intent = new Intent(MainActivity.this, AddWords.class);
+                                startActivity(intent);
+                            }
+                        }
+                        return true;
+                    }
+                });
+//                MenuInflater inflater = popup.getMenuInflater();
+//                inflater.inflate(R.menu.menu, popup.getMenu());
+                popup.show();
+
+            }
+        });
+
         main_btn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -124,33 +169,30 @@ public class MainActivity extends AppCompatActivity {
         switchLang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 switchLan();
             }
         });
         twNativeWord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 doHintAction();
             }
         });
-        btnNewWords.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent;
-                intent = new Intent(MainActivity.this, AddWords.class);
-                startActivity(intent);
-            }
-        });
+
 
         if (!haveNetworkConnection()) {
-            Toast.makeText(getApplicationContext(), "Check Internet Connections",
-                    Toast.LENGTH_SHORT).show();
+            showToast();
         } else {
-            Log.d("my tag", "befour get data");
             new GetData().execute();
-            Log.d("my tag", "dict_size: " + dictSize);
         }
 
+    }
+
+    public void showToast(){
+        Toast.makeText(getApplicationContext(), "Check Internet Connections",
+                Toast.LENGTH_SHORT).show();
     }
 
     private void doAnswerAction() {
@@ -177,7 +219,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
     public void doHintAction() {
         if (wordLength < listOfListsOfLists.get(val).get(nativeDict).length()) {
             wordHint = listOfListsOfLists.get(val).get(nativeDict).substring(0, wordLength + 1);
@@ -191,6 +232,11 @@ public class MainActivity extends AppCompatActivity {
     public static String loadData(Context context, String key) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         String text = sharedPreferences.getString(key, "");
+        return text;
+    }
+    public static Integer loadData_lang(Context context, String key) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        Integer text = sharedPreferences.getInt(key,0);
         return text;
     }
 
@@ -241,12 +287,16 @@ public class MainActivity extends AppCompatActivity {
         editText.getText().clear();
         wordHint = String.valueOf(0);
         wordLength = 0;
-        twForeignWord.setText(listOfListsOfLists.get(val).get(foreignDict));
-        value = Integer.parseInt(listOfListsOfLists.get(val).get(2)) + 1;
-        value_sum = Integer.parseInt(listOfListsOfLists.get(val).get(4)) + 1;
-        sendData(val, 3, value);
-        listOfListsOfLists.get(val).set(2, String.valueOf(value));
-        listOfListsOfLists.get(val).set(4, String.valueOf(value_sum));
+        if (nextWordPressed){
+            twForeignWord.setText(listOfListsOfLists.get(val).get(foreignDict));
+        } else {
+            twForeignWord.setText(listOfListsOfLists.get(val).get(foreignDict));
+            value = Integer.parseInt(listOfListsOfLists.get(val).get(2)) + 1;
+            value_sum = Integer.parseInt(listOfListsOfLists.get(val).get(4)) + 1;
+            sendData(val, 3, value);
+            listOfListsOfLists.get(val).set(2, String.valueOf(value));
+            listOfListsOfLists.get(val).set(4, String.valueOf(value_sum));
+        }
     }
 
     public class GetData extends AsyncTask<String, Void, String> {
@@ -415,7 +465,15 @@ public class MainActivity extends AppCompatActivity {
         nativeDict = (foreignDict - 1) * (-1);
         twTextForeign.setText(listLangNames.get(foreignDict));
         twTextNative.setText(listLangNames.get(nativeDict));
+        saveSheetIDAndName(MainActivity.this,foreignDict);
         nextWord(dictSize);
+    }
+
+    public static void saveSheetIDAndName(Context context,int langValue) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(KEY_lang, langValue);
+        editor.apply();
     }
 
     private boolean haveNetworkConnection() {
