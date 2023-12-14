@@ -1,9 +1,11 @@
 package com.example.test_app_2;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
@@ -149,6 +151,42 @@ public class MainActivity extends AppCompatActivity {
                                 intent = new Intent(MainActivity.this, AddWords.class);
                                 startActivity(intent);
                             }
+                        } else if (id == R.id.deleteCurWord) {
+                            //TODO dropdown question Yes/No
+                            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+
+                            builder.setTitle("Confirmation");
+                            builder.setMessage("This will permanently delete current word from table.\nAre you sure?");
+
+                            builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+
+                                public void onClick(DialogInterface dialog, int which) {
+                                    if (!haveNetworkConnection()){
+                                        showToast();
+                                    }
+                                    //deleteCurrentWord();
+                                    // Do nothing but close the dialog
+                                    dialog.dismiss();
+                                }
+                            });
+
+                            builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // Do nothing
+                                    dialog.dismiss();
+                                }
+                            });
+                            AlertDialog alert = builder.create();
+                            alert.show();
+
+
+                        } else if (id == R.id.clearAllFlags) {
+                            //TODO
+                            //clearFlags();
+                        } else if (id == R.id.clearAllHistory){
+                            //TODO Clear all history of answers.
                         }
                         return true;
                     }
@@ -159,6 +197,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
 
         main_btn2.setOnClickListener(new View.OnClickListener() {
             @Override
