@@ -32,24 +32,25 @@ public class EditWord extends AppCompatActivity {
     String sheetID_1, shtName, forWordToSend, netWordToSend, oldForeignWord, oldNativeWord, value;
     EditText foreignNewWord, nativeNewWord;
     int row,col,actionChose;
-    ImageButton backToMain;
+    ImageButton backToMain,submit;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_words);
+        setContentView(R.layout.activity_edit_word);
         sheetID_1 = MainActivity.loadData(this,KEY);
         shtName = MainActivity.loadData(this,KEY_1);
-        Button submit = findViewById(R.id.submitNewWords);
+        submit = findViewById(R.id.submitNewWords);
         backToMain = findViewById(R.id.goBack);
-        foreignNewWord = findViewById(R.id.newForeignWord);
-        nativeNewWord = findViewById(R.id.newNativeWord);
+        foreignNewWord = findViewById(R.id.oldForeignWord);
+        nativeNewWord = findViewById(R.id.oldNativeWord);
         Bundle b = getIntent().getExtras();
         if (b != null){
             row = b.getInt("row_num") + 2;
             oldForeignWord = b.getString("oldForeignWord");
             oldNativeWord = b.getString("oldNativeWord");
         }
-
+        foreignNewWord.setTextSize(20);
+        nativeNewWord.setTextSize(20);
         foreignNewWord.setText(oldForeignWord);
         nativeNewWord.setText(oldNativeWord);
 

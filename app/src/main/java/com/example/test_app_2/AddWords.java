@@ -29,7 +29,7 @@ public class AddWords extends AppCompatActivity {
     private static final String KEY_1 = "myKey_1";
     String sheetID_1, shtName, forWordToSend, netWordToSend;
     EditText foreignNewWord, nativeNewWord;
-    ImageButton backToMain;
+    ImageButton backToMain,submit;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +37,7 @@ public class AddWords extends AppCompatActivity {
         setContentView(R.layout.activity_add_words);
         sheetID_1 = MainActivity.loadData(this,KEY);
         shtName = MainActivity.loadData(this,KEY_1);
-        Button submit = findViewById(R.id.submitNewWords);
+        submit = findViewById(R.id.submitNewWords);
         backToMain = findViewById(R.id.goBack);
         foreignNewWord = findViewById(R.id.newForeignWord);
         nativeNewWord = findViewById(R.id.newNativeWord);

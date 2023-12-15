@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/newdots">
+<layer-list xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/baseline_menu_24"
+        tools:ignore="ResourceCycle">
         <solid android:fillColor="#FFAABB" android:width="2dp"/>
         <color android:color="@color/white"></color>
     </item>

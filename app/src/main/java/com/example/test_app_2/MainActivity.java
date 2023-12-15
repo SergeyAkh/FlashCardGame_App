@@ -63,9 +63,9 @@ public class MainActivity extends AppCompatActivity {
     private static final String KEY_lang = "foreign_lang";
     public String sheetID = BuildConfig.Sheet_ID;
     String apiKEY = BuildConfig.API_KEY;
-    Button main_btn2;
+    ImageButton main_btn2;
     boolean internetConnection;
-    ImageButton switchLang, btnMenu,nxtWord;
+    ImageButton switchLang, btnMenu,nxtWord,learnedButton;
     int dictSize = 0, val, wordLength = 0, countAppearance, countRightAnswers, col, row, value, value_sum, langValue,actionChose;
     public String strFWord, strNWord, wordHint, urls, sheetID_1, shtName;
     Random rand = new Random();
@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
         main_btn2 = findViewById(R.id.btn_answer2);
         switchLang = findViewById(R.id.switchLang);
         btnMenu = findViewById(R.id.btnMenu);
+        learnedButton = findViewById(R.id.btnLearned);
         twForeignWord = findViewById(R.id.foreignWord);
         nxtWord = findViewById(R.id.btnNextWord);
         twNativeWord = findViewById(R.id.nativeWord);
@@ -125,6 +126,38 @@ public class MainActivity extends AppCompatActivity {
         } else {
             editText.setBackgroundDrawable(drawable); // use setBackgroundDrawable because setBackground required API 16
         }
+        PopupMenu popup = new PopupMenu(MainActivity.this, btnMenu);
+        popup.getMenuInflater().inflate(R.menu.menu,popup.getMenu());
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        learnedButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                builder.setTitle("Learned");
+                builder.setMessage("The word is learned and will be deleted from table.\nAre you sure?");
+
+                builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (!haveNetworkConnection()){
+                            showToast();
+                        }
+                        deleteCurrentWord();
+                        nextWord(dictSize);
+                        dialog.dismiss();
+                    }
+                });
+
+                builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Do nothing
+                        dialog.dismiss();
+                    }
+                });
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
+        });
 
         nxtWord.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,9 +170,7 @@ public class MainActivity extends AppCompatActivity {
         btnMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PopupMenu popup = new PopupMenu(MainActivity.this, btnMenu);
-                popup.getMenuInflater().inflate(R.menu.menu,popup.getMenu());
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
@@ -164,58 +195,7 @@ public class MainActivity extends AppCompatActivity {
                             b.putString("oldNativeWord", listOfListsOfLists.get(val).get(nativeDict));
                             intent.putExtras(b);
                             startActivity(intent);
-                        } else if (id == R.id.deleteCurWord) {
 
-                            builder.setTitle("Delete word");
-                            builder.setMessage("This will permanently delete current word from table.\nAre you sure?");
-
-                            builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    if (!haveNetworkConnection()){
-                                        showToast();
-                                    }
-                                    deleteCurrentWord();
-                                    nextWord(dictSize);
-                                    dialog.dismiss();
-                                }
-                            });
-
-                            builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // Do nothing
-                                    dialog.dismiss();
-                                }
-                            });
-                            AlertDialog alert = builder.create();
-                            alert.show();
-
-
-                        } else if (id == R.id.clearAllFlags) {
-
-                            builder.setTitle("Information about learned words");
-                            builder.setMessage("Clear all information about words you marked as learned.\nAre you sure?");
-                            builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    if (!haveNetworkConnection()){
-                                        showToast();
-                                    }
-                                    clearAllFlags();
-                                    dialog.dismiss();
-                                }
-                            });
-
-                            builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // Do nothing
-                                    dialog.dismiss();
-                                }
-                            });
-                            AlertDialog alert = builder.create();
-                            alert.show();
                         } else if (id == R.id.clearAllHistory){
                             //TODO Clear all history of answers.
                             builder.setTitle("Clear statistics");
@@ -283,11 +263,6 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), "This is clear All history action!!",
                 Toast.LENGTH_SHORT).show();
     }
-    //TODO clearAllFlags
-    public void clearAllFlags(){
-
-    }
-    // TODO deleteCurrentWord
     public void deleteCurrentWord(){
         listOfListsOfLists.remove(val);
         sendData(val,1,1,1);
@@ -514,7 +489,7 @@ public class MainActivity extends AppCompatActivity {
 //                        "https://script.google.com/macros/s/AKfycbwFAIvRwhMXr3VkLtsWgnJpODv7oQD5kruE1RSABnNrpi1H1qm6QZ-5qj6SE1F5ozzj7w/exec");
                 //
                 JSONObject postDataParams = new JSONObject();
-                Log.d("my tag", String.valueOf(choseAction));
+                Log.d("my tag", "row: "+row+"colNum: "+col+"actionChose: "+choseAction);
                 postDataParams.put("values", value);
                 postDataParams.put("shtID", sheetID_1);
                 postDataParams.put("shtName", shtName);
