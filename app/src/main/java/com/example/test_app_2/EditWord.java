@@ -31,7 +31,7 @@ public class EditWord extends AppCompatActivity {
     private static final String KEY_1 = "myKey_1";
     String sheetID_1, shtName, forWordToSend, netWordToSend, oldForeignWord, oldNativeWord, value;
     EditText foreignNewWord, nativeNewWord;
-    int row,col;
+    int row,col,actionChose;
     ImageButton backToMain;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +59,8 @@ public class EditWord extends AppCompatActivity {
                 forWordToSend = foreignNewWord.getText().toString().trim();
                 netWordToSend = nativeNewWord.getText().toString().trim();
                 if (!(forWordToSend.isEmpty())&!(netWordToSend.isEmpty())){
-                    sendData(row,1,forWordToSend);
-                    sendData(row,2,netWordToSend);
+                    sendData(row,1,forWordToSend,0);
+                    sendData(row,2,netWordToSend,0);
                     foreignNewWord.setText("");
                     nativeNewWord.setText("");
                     Toast.makeText(EditWord.this, "Word is being changed", Toast.LENGTH_LONG).show();
@@ -79,10 +79,11 @@ public class EditWord extends AppCompatActivity {
             }
         });
     }
-    private void sendData(int row, int col, String value_new) {
+    private void sendData(int row, int col, String value_new,int actionChose) {
         this.row = row;
         this.col = col;
         this.value = value_new;
+        this.actionChose = actionChose;
         new SendMyData().execute();
     }
 
@@ -90,11 +91,12 @@ public class EditWord extends AppCompatActivity {
         int col = EditWord.this.col;
         int row = EditWord.this.row;
         String value = EditWord.this.value;
+        int actionChose = EditWord.this.actionChose;
 
         @Override
         protected String doInBackground(String... strings) {
             try {
-                URL url = new URL("https://script.google.com/macros/s/AKfycbyn2hquKrCHYtTv8d-CTimqbnZcr1ZoWzppd9QnORbiHd4zJkoINjmHRSksbg1YgJDNBg/exec");
+                URL url = new URL("https://script.google.com/macros/s/AKfycbwtqhZb-aMYOAiR69ZdMXehyRfI8nS7stFRduU7JQdEQ0OTevvw_zyp4zPDgxi1EAq4uQ/exec");
 //                        "https://script.google.com/macros/s/AKfycbwFAIvRwhMXr3VkLtsWgnJpODv7oQD5kruE1RSABnNrpi1H1qm6QZ-5qj6SE1F5ozzj7w/exec");
                 //
                 JSONObject postDataParams = new JSONObject();
@@ -104,6 +106,8 @@ public class EditWord extends AppCompatActivity {
                 postDataParams.put("shtName", shtName);
                 postDataParams.put("rowNum", row);
                 postDataParams.put("colNum", col);
+                postDataParams.put("actionChose", actionChose);
+
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setReadTimeout(15000 /* milliseconds */);
                 conn.setConnectTimeout(15000 /* milliseconds */);

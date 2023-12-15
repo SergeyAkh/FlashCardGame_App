@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
     Button main_btn2;
     boolean internetConnection;
     ImageButton switchLang, btnMenu,nxtWord;
-    int dictSize = 0, val, wordLength = 0, countAppearance, countRightAnswers, col, row, value, value_sum, langValue;
+    int dictSize = 0, val, wordLength = 0, countAppearance, countRightAnswers, col, row, value, value_sum, langValue,actionChose;
     public String strFWord, strNWord, wordHint, urls, sheetID_1, shtName;
     Random rand = new Random();
     JSONArray jsonArray;
@@ -175,6 +175,7 @@ public class MainActivity extends AppCompatActivity {
                                         showToast();
                                     }
                                     deleteCurrentWord();
+                                    nextWord(dictSize);
                                     dialog.dismiss();
                                 }
                             });
@@ -288,7 +289,9 @@ public class MainActivity extends AppCompatActivity {
     }
     // TODO deleteCurrentWord
     public void deleteCurrentWord(){
-
+        listOfListsOfLists.remove(val);
+        sendData(val,1,1,1);
+        dictSize = listOfListsOfLists.size();
     }
 
     public void showToast(){
@@ -308,7 +311,7 @@ public class MainActivity extends AppCompatActivity {
                 value_sum = Integer.parseInt(listOfListsOfLists.get(val).get(4)) + 1;
                 listOfListsOfLists.get(val).set(3, String.valueOf(value));
                 listOfListsOfLists.get(val).set(4, String.valueOf(value_sum));
-                sendData(val, 4, value);
+                sendData(val, 4, value,0);
                 nextWord(dictSize);
             } else if (checkAnswer & wordLength > 1) {
                 //Wright answer, but with hint
@@ -371,10 +374,12 @@ public class MainActivity extends AppCompatActivity {
         if (summation==0){
             num = rand.nextInt(size);
             return num;
+
         } else{
-            for (int i = 0; i< size; i++){
+            for (int i = 0; i < size; i++){
                 int count = max - Integer.parseInt(listOfListsOfLists.get(i).get(4));
-                for (int j=0; j<count;j++){
+
+                for (int j=0; j<count+1;j++){
                     wordsToChose.add(i);
 
                 }
@@ -415,16 +420,14 @@ public class MainActivity extends AppCompatActivity {
         editText.getText().clear();
         wordHint = String.valueOf(0);
         wordLength = 0;
-        if (nextWordPressed){
-            twForeignWord.setText(listOfListsOfLists.get(val).get(foreignDict));
-        } else {
-            twForeignWord.setText(listOfListsOfLists.get(val).get(foreignDict));
-            value = Integer.parseInt(listOfListsOfLists.get(val).get(2)) + 1;
-            value_sum = Integer.parseInt(listOfListsOfLists.get(val).get(4)) + 1;
-            sendData(val, 3, value);
-            listOfListsOfLists.get(val).set(2, String.valueOf(value));
-            listOfListsOfLists.get(val).set(4, String.valueOf(value_sum));
-        }
+
+        twForeignWord.setText(listOfListsOfLists.get(val).get(foreignDict));
+        value = Integer.parseInt(listOfListsOfLists.get(val).get(2)) + 1;
+        value_sum = Integer.parseInt(listOfListsOfLists.get(val).get(4)) + 1;
+        sendData(val, 3, value,0);
+        listOfListsOfLists.get(val).set(2, String.valueOf(value));
+        listOfListsOfLists.get(val).set(4, String.valueOf(value_sum));
+
     }
 
     public class GetData extends AsyncTask<String, Void, String> {
@@ -490,11 +493,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void sendData(int row, int col, int value_new) {
+    private void sendData(int row, int col, int value_new, int actionChose) {
         this.row = row + 2;
         this.col = col;
         this.value = value_new;
-//        new SendData().execute();
+        this.actionChose = actionChose;
+
         new SendMyData().execute();
     }
 
@@ -502,20 +506,21 @@ public class MainActivity extends AppCompatActivity {
         int col = MainActivity.this.col;
         int row = MainActivity.this.row;
         int value = MainActivity.this.value;
-
+        int choseAction = MainActivity.this.actionChose;
         @Override
         protected String doInBackground(String... strings) {
             try {
-                URL url = new URL("https://script.google.com/macros/s/AKfycbyn2hquKrCHYtTv8d-CTimqbnZcr1ZoWzppd9QnORbiHd4zJkoINjmHRSksbg1YgJDNBg/exec");
+                URL url = new URL("https://script.google.com/macros/s/AKfycbwtqhZb-aMYOAiR69ZdMXehyRfI8nS7stFRduU7JQdEQ0OTevvw_zyp4zPDgxi1EAq4uQ/exec");
 //                        "https://script.google.com/macros/s/AKfycbwFAIvRwhMXr3VkLtsWgnJpODv7oQD5kruE1RSABnNrpi1H1qm6QZ-5qj6SE1F5ozzj7w/exec");
                 //
                 JSONObject postDataParams = new JSONObject();
-
+                Log.d("my tag", String.valueOf(choseAction));
                 postDataParams.put("values", value);
                 postDataParams.put("shtID", sheetID_1);
                 postDataParams.put("shtName", shtName);
                 postDataParams.put("rowNum", row);
                 postDataParams.put("colNum", col);
+                postDataParams.put("actionChose", choseAction);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setReadTimeout(15000 /* milliseconds */);
                 conn.setConnectTimeout(15000 /* milliseconds */);
