@@ -5,6 +5,10 @@
         android:icon="@drawable/threedots"
         android:title="Add new word" />
     <item
+        android:id="@+id/editCurWord"
+        android:icon="@drawable/threedots"
+        android:title="Edit current word" />
+    <item
         android:id="@+id/deleteCurWord"
         android:icon="@drawable/threedots"
         android:title="Delete current word" />

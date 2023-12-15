@@ -44,6 +44,7 @@ import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -102,7 +103,6 @@ public class MainActivity extends AppCompatActivity {
         sheetID_1 = loadData(this, KEY);
         try {
             langValue = loadData_lang(MainActivity.this, KEY_lang);
-            Log.d("my tag", String.valueOf(langValue));
             foreignDict = langValue;
             nativeDict = (foreignDict - 1) * (-1);
         } catch (Exception e){
@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
         }
         shtName = loadData(this, KEY_1);
         //Add first run SheetID and SheetName
-        Log.d("my tag", "here "+haveNetworkConnection());
+
         if (sheetID_1.isEmpty()) {
             Intent intent;
             intent = new Intent(MainActivity.this, AddSheetID.class);
@@ -125,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             editText.setBackgroundDrawable(drawable); // use setBackgroundDrawable because setBackground required API 16
         }
+
         nxtWord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -138,34 +139,42 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 PopupMenu popup = new PopupMenu(MainActivity.this, btnMenu);
                 popup.getMenuInflater().inflate(R.menu.menu,popup.getMenu());
-
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
+
                         int id = menuItem.getItemId();
                         if (id == R.id.addNewWord){
                             if (!haveNetworkConnection()){
                                 showToast();
                             } else {
-                                Intent intent;
-                                intent = new Intent(MainActivity.this, AddWords.class);
+                                Intent intent = new Intent(MainActivity.this, AddWords.class);
                                 startActivity(intent);
                             }
-                        } else if (id == R.id.deleteCurWord) {
-                            //TODO dropdown question Yes/No
-                            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
 
-                            builder.setTitle("Confirmation");
+                        } else if (id == R.id.editCurWord) {
+                            if (!haveNetworkConnection()){
+                                showToast();
+                            }
+                            Intent intent = new Intent(MainActivity.this, EditWord.class);
+                            Bundle b = new Bundle();
+                            b.putInt("row_num", val);
+                            b.putString("oldForeignWord", listOfListsOfLists.get(val).get(foreignDict));
+                            b.putString("oldNativeWord", listOfListsOfLists.get(val).get(nativeDict));
+                            intent.putExtras(b);
+                            startActivity(intent);
+                        } else if (id == R.id.deleteCurWord) {
+
+                            builder.setTitle("Delete word");
                             builder.setMessage("This will permanently delete current word from table.\nAre you sure?");
 
                             builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-
                                 public void onClick(DialogInterface dialog, int which) {
                                     if (!haveNetworkConnection()){
                                         showToast();
                                     }
-                                    //deleteCurrentWord();
-                                    // Do nothing but close the dialog
+                                    deleteCurrentWord();
                                     dialog.dismiss();
                                 }
                             });
@@ -183,10 +192,53 @@ public class MainActivity extends AppCompatActivity {
 
 
                         } else if (id == R.id.clearAllFlags) {
-                            //TODO
-                            //clearFlags();
+
+                            builder.setTitle("Information about learned words");
+                            builder.setMessage("Clear all information about words you marked as learned.\nAre you sure?");
+                            builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    if (!haveNetworkConnection()){
+                                        showToast();
+                                    }
+                                    clearAllFlags();
+                                    dialog.dismiss();
+                                }
+                            });
+
+                            builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // Do nothing
+                                    dialog.dismiss();
+                                }
+                            });
+                            AlertDialog alert = builder.create();
+                            alert.show();
                         } else if (id == R.id.clearAllHistory){
                             //TODO Clear all history of answers.
+                            builder.setTitle("Clear statistics");
+                            builder.setMessage("Clear all statistics for whole dictionary.\nAre you sure?");
+                            builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    if (!haveNetworkConnection()){
+                                        showToast();
+                                    }
+                                    clearAllHistory();
+                                    dialog.dismiss();
+                                }
+                            });
+
+                            builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // Do nothing
+                                    dialog.dismiss();
+                                }
+                            });
+                            AlertDialog alert = builder.create();
+                            alert.show();
                         }
                         return true;
                     }
@@ -198,7 +250,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         main_btn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -208,14 +259,12 @@ public class MainActivity extends AppCompatActivity {
         switchLang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 switchLan();
             }
         });
         twNativeWord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 doHintAction();
             }
         });
@@ -226,6 +275,19 @@ public class MainActivity extends AppCompatActivity {
         } else {
             new GetData().execute();
         }
+
+    }
+    //TODO clearAllHistory
+    public void clearAllHistory(){
+        Toast.makeText(getApplicationContext(), "This is clear All history action!!",
+                Toast.LENGTH_SHORT).show();
+    }
+    //TODO clearAllFlags
+    public void clearAllFlags(){
+
+    }
+    // TODO deleteCurrentWord
+    public void deleteCurrentWord(){
 
     }
 
@@ -294,7 +356,34 @@ public class MainActivity extends AppCompatActivity {
     public int getInt(int size) {
         return rand.nextInt(size);
     }
+    public int calcSmart(int size){
+        int num = 0;
+        ArrayList<Integer> wordsToChose = new ArrayList<Integer>();
+        int summation = 0;
+        int max = Integer.parseInt(listOfListsOfLists.get(0).get(4));
+        for (int i = 0; i< size; i++){
+            summation = summation + Integer.parseInt(listOfListsOfLists.get(i).get(4));
+            if (Integer.parseInt(listOfListsOfLists.get(i).get(4)) > max) {
+                max = Integer.parseInt(listOfListsOfLists.get(i).get(4));
+            }
+        }
 
+        if (summation==0){
+            num = rand.nextInt(size);
+            return num;
+        } else{
+            for (int i = 0; i< size; i++){
+                int count = max - Integer.parseInt(listOfListsOfLists.get(i).get(4));
+                for (int j=0; j<count;j++){
+                    wordsToChose.add(i);
+
+                }
+            }
+
+            num = wordsToChose.get(rand.nextInt(wordsToChose.size()));
+            return num;
+        }
+    }
     public int calc(int size) {
         int num = 0;
         if (listMintedProb.isEmpty()) {
@@ -321,7 +410,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void nextWord(int dictSize) {
 //        val = getInt(dictSize);
-        val = calc(dictSize);
+        val = calcSmart(dictSize);
         twNativeWord.setText("");
         editText.getText().clear();
         wordHint = String.valueOf(0);

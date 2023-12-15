@@ -9,15 +9,18 @@
 
     <application
         android:allowBackup="true"
-        android:screenOrientation="portrait"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@drawable/study_9100495"
         android:label="@string/app_name"
         android:roundIcon="@drawable/study_9100495"
+        android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/Theme.MaterialComponents.NoActionBar"
         tools:targetApi="31">
+        <activity
+            android:name=".EditWord"
+            android:exported="false" />
         <activity
             android:name=".AddWords"
             android:exported="false" />
