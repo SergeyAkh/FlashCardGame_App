@@ -18,6 +18,8 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -129,12 +131,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 builder.setTitle("Learned");
-                builder.setMessage("The word is learned and will be deleted from table.\nAre you sure?");
+                builder.setMessage("The word is learned and will be deleted from dictionary.\nAre you sure?");
 
                 builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         if (!haveNetworkConnection()){
-                            showToast();
+                            showToast("Check Internet Connections");
                         }
                         deleteCurrentWord();
                         nextWord(dictSize);
@@ -174,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
                         int id = menuItem.getItemId();
                         if (id == R.id.addNewWord){
                             if (!haveNetworkConnection()){
-                                showToast();
+                                showToast("Check Internet Connections");
                             } else {
 //                                Intent intent = new Intent(MainActivity.this, EditWord.class);
                                 b.putInt("row_num", val);
@@ -186,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
 
                         } else if (id == R.id.editCurWord) {
                             if (!haveNetworkConnection()){
-                                showToast();
+                                showToast("Check Internet Connections");
                             } else {
                                 b.putInt("row_num", val);
                                 b.putString("oldForeignWord", listOfListsOfLists.get(val).get(foreignDict));
@@ -204,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
                             builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     if (!haveNetworkConnection()){
-                                        showToast();
+                                        showToast("Check Internet Connections");
                                     } else {
                                         clearAllHistory();
                                         dialog.dismiss();
@@ -255,7 +257,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         if (!haveNetworkConnection()) {
-            showToast();
+            showToast("Check Internet Connections");
         } else {
             new GetData().execute();
         }
@@ -264,8 +266,7 @@ public class MainActivity extends AppCompatActivity {
     //TODO clearAllHistory
     public void clearAllHistory(){
         sendData(1,0,0,2);
-        Toast.makeText(getApplicationContext(), "This is clear All history action!!",
-                Toast.LENGTH_SHORT).show();
+        showToast("Data is cleared");
     }
     public void deleteCurrentWord(){
         listOfListsOfLists.remove(val);
@@ -273,19 +274,19 @@ public class MainActivity extends AppCompatActivity {
         dictSize = listOfListsOfLists.size();
     }
 
-    public void showToast(){
-        Toast.makeText(getApplicationContext(), "Check Internet Connections",
+    public void showToast(String txt){
+        Toast.makeText(getApplicationContext(), txt,
                 Toast.LENGTH_SHORT).show();
     }
 
     private void doAnswerAction() {
         if (editText.getText().toString().trim().equals("")) {
-            Toast.makeText(MainActivity.this, "Type your answer", Toast.LENGTH_LONG).show();
+            showToast("Type your answer");
         } else {
             boolean checkAnswer = listOfListsOfLists.get(val).get(nativeDict).toUpperCase().trim().equals(editText.getText().toString().toUpperCase().trim());
             if (checkAnswer & wordLength <= 1) {
                 //Right answer without hints, add 1 to array of right answers
-                Toast.makeText(MainActivity.this, "Wright answer ", Toast.LENGTH_SHORT).show();
+                showToast("Wright answer");
                 value = Integer.parseInt(listOfListsOfLists.get(val).get(3)) + 1;
                 value_sum = Integer.parseInt(listOfListsOfLists.get(val).get(4)) + 1;
                 listOfListsOfLists.get(val).set(3, String.valueOf(value));
@@ -294,11 +295,11 @@ public class MainActivity extends AppCompatActivity {
                 nextWord(dictSize);
             } else if (checkAnswer & wordLength > 1) {
                 //Wright answer, but with hint
-                Toast.makeText(MainActivity.this, "Wright answer ", Toast.LENGTH_SHORT).show();
+                showToast("Wright answer");
                 nextWord(dictSize);
             } else {
                 //Wrong answer
-                Toast.makeText(MainActivity.this, "Wrong answer ", Toast.LENGTH_SHORT).show();
+                showToast("Wrong answer");
             }
         }
     }
@@ -308,7 +309,7 @@ public class MainActivity extends AppCompatActivity {
             twNativeWord.setText(wordHint);
             wordLength++;
         } else {
-            Toast.makeText(MainActivity.this, "Whole word is being shown ", Toast.LENGTH_SHORT).show();
+            showToast("Whole word is being shown ");
         }
     }
 

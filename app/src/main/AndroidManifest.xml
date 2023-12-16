@@ -22,9 +22,6 @@
             android:name=".EditWord"
             android:exported="false" />
         <activity
-            android:name=".AddWords"
-            android:exported="false" />
-        <activity
             android:name=".AddSheetID"
             android:exported="false" />
         <activity
