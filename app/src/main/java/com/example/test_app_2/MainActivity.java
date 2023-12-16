@@ -78,11 +78,7 @@ public class MainActivity extends AppCompatActivity {
     boolean nextWordPressed = false;
     int foreignDict = 0;
     int nativeDict = (foreignDict - 1) * (-1);
-//    @Override
-//    protected void onSaveInstanceState(Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        outState.putInt(STATE_COUNTER, mCounter);
-//    }
+    String urlSendData = "https://script.google.com/macros/s/AKfycbxKm3b1SXhf9x2HOalTxwYh1w-xtNFMShsqIWQb_615Ncf1JNGV0e1J7HB9CrWVRU6-Og/exec";
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -158,7 +154,6 @@ public class MainActivity extends AppCompatActivity {
                 alert.show();
             }
         });
-
         nxtWord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -174,27 +169,33 @@ public class MainActivity extends AppCompatActivity {
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
-
+                        Intent intent = new Intent(MainActivity.this, EditWord.class);
+                        Bundle b = new Bundle();
                         int id = menuItem.getItemId();
                         if (id == R.id.addNewWord){
                             if (!haveNetworkConnection()){
                                 showToast();
                             } else {
-                                Intent intent = new Intent(MainActivity.this, AddWords.class);
+//                                Intent intent = new Intent(MainActivity.this, EditWord.class);
+                                b.putInt("row_num", val);
+                                b.putString("URL",urlSendData);
+                                b.putInt("action",3);
+                                intent.putExtras(b);
                                 startActivity(intent);
                             }
 
                         } else if (id == R.id.editCurWord) {
                             if (!haveNetworkConnection()){
                                 showToast();
+                            } else {
+                                b.putInt("row_num", val);
+                                b.putString("oldForeignWord", listOfListsOfLists.get(val).get(foreignDict));
+                                b.putString("oldNativeWord", listOfListsOfLists.get(val).get(nativeDict));
+                                b.putString("URL", urlSendData);
+                                b.putInt("action", 0);
+                                intent.putExtras(b);
+                                startActivity(intent);
                             }
-                            Intent intent = new Intent(MainActivity.this, EditWord.class);
-                            Bundle b = new Bundle();
-                            b.putInt("row_num", val);
-                            b.putString("oldForeignWord", listOfListsOfLists.get(val).get(foreignDict));
-                            b.putString("oldNativeWord", listOfListsOfLists.get(val).get(nativeDict));
-                            intent.putExtras(b);
-                            startActivity(intent);
 
                         } else if (id == R.id.clearAllHistory){
                             //TODO Clear all history of answers.
@@ -204,9 +205,11 @@ public class MainActivity extends AppCompatActivity {
                                 public void onClick(DialogInterface dialog, int which) {
                                     if (!haveNetworkConnection()){
                                         showToast();
+                                    } else {
+                                        clearAllHistory();
+                                        dialog.dismiss();
                                     }
-                                    clearAllHistory();
-                                    dialog.dismiss();
+
                                 }
                             });
 
@@ -260,6 +263,7 @@ public class MainActivity extends AppCompatActivity {
     }
     //TODO clearAllHistory
     public void clearAllHistory(){
+        sendData(1,0,0,2);
         Toast.makeText(getApplicationContext(), "This is clear All history action!!",
                 Toast.LENGTH_SHORT).show();
     }
@@ -317,18 +321,6 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         Integer text = sharedPreferences.getInt(key,0);
         return text;
-    }
-
-    public int getColToSend() {
-        return this.col;
-    }
-
-    public int getRowToSend() {
-        return this.row;
-    }
-
-    public int getValToSend() {
-        return this.value;
     }
 
     public int getInt(int size) {
@@ -485,7 +477,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... strings) {
             try {
-                URL url = new URL("https://script.google.com/macros/s/AKfycbwtqhZb-aMYOAiR69ZdMXehyRfI8nS7stFRduU7JQdEQ0OTevvw_zyp4zPDgxi1EAq4uQ/exec");
+                URL url = new URL(urlSendData);
 //                        "https://script.google.com/macros/s/AKfycbwFAIvRwhMXr3VkLtsWgnJpODv7oQD5kruE1RSABnNrpi1H1qm6QZ-5qj6SE1F5ozzj7w/exec");
                 //
                 JSONObject postDataParams = new JSONObject();

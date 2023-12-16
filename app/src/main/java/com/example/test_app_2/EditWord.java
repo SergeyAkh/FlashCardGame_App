@@ -29,9 +29,10 @@ import javax.net.ssl.HttpsURLConnection;
 public class EditWord extends AppCompatActivity {
     private static final String KEY = "myKey";
     private static final String KEY_1 = "myKey_1";
-    String sheetID_1, shtName, forWordToSend, netWordToSend, oldForeignWord, oldNativeWord, value;
+    String sheetID_1, shtName, forWordToSend, netWordToSend, oldForeignWord, oldNativeWord, value,urlSendData,wordForeign,wordNative;
     EditText foreignNewWord, nativeNewWord;
-    int row,col,actionChose;
+
+    int row,col,actionChose,action;
     ImageButton backToMain,submit;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,32 +44,52 @@ public class EditWord extends AppCompatActivity {
         backToMain = findViewById(R.id.goBack);
         foreignNewWord = findViewById(R.id.oldForeignWord);
         nativeNewWord = findViewById(R.id.oldNativeWord);
+        TextView title = (TextView) findViewById (R.id.titleCard);
         Bundle b = getIntent().getExtras();
         if (b != null){
-            row = b.getInt("row_num") + 2;
-            oldForeignWord = b.getString("oldForeignWord");
-            oldNativeWord = b.getString("oldNativeWord");
+            action = b.getInt("action");
+            urlSendData = b.getString("URL");
+            if (action == 0) {
+                row = b.getInt("row_num") + 2;
+                oldForeignWord = b.getString("oldForeignWord");
+                oldNativeWord = b.getString("oldNativeWord");
+                foreignNewWord.setText(oldForeignWord);
+                nativeNewWord.setText(oldNativeWord);
+                title.setText("Edit word");
+            } else{
+                title.setText("Enter new word \n to dictionary");
+            }
         }
         foreignNewWord.setTextSize(20);
         nativeNewWord.setTextSize(20);
-        foreignNewWord.setText(oldForeignWord);
-        nativeNewWord.setText(oldNativeWord);
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 forWordToSend = foreignNewWord.getText().toString().trim();
                 netWordToSend = nativeNewWord.getText().toString().trim();
-                if (!(forWordToSend.isEmpty())&!(netWordToSend.isEmpty())){
-                    sendData(row,1,forWordToSend,0);
-                    sendData(row,2,netWordToSend,0);
-                    foreignNewWord.setText("");
-                    nativeNewWord.setText("");
-                    Toast.makeText(EditWord.this, "Word is being changed", Toast.LENGTH_LONG).show();
+                if (action==0){
+                    //Action change word
+                    if (!(forWordToSend.isEmpty())&!(netWordToSend.isEmpty())){
+                        sendData(row,1,forWordToSend,action,forWordToSend,netWordToSend);
+                        sendData(row,2,netWordToSend,action,forWordToSend,netWordToSend);
+                        foreignNewWord.setText("");
+                        nativeNewWord.setText("");
+                        Toast.makeText(EditWord.this, "Word is being changed", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(EditWord.this, "Please enter new value for word: "+oldForeignWord +" with value: "+oldNativeWord, Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    //Action add word
+                    if (!(forWordToSend.isEmpty())&!(netWordToSend.isEmpty())){
+                        sendData(row,1,forWordToSend,action,forWordToSend,netWordToSend);
+                        foreignNewWord.setText("");
+                        nativeNewWord.setText("");
+                        Toast.makeText(EditWord.this, "Word is being changed", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(EditWord.this, "Please enter new word", Toast.LENGTH_LONG).show();
+                    }
                 }
-
-                Toast.makeText(EditWord.this, "Please enter new value for word: "+oldForeignWord +" with value: "+oldNativeWord, Toast.LENGTH_LONG).show();
-
             }
         });
         backToMain.setOnClickListener(new View.OnClickListener() {
@@ -80,11 +101,13 @@ public class EditWord extends AppCompatActivity {
             }
         });
     }
-    private void sendData(int row, int col, String value_new,int actionChose) {
+    private void sendData(int row, int col, String value_new,int actionChose,String wordForeign,String wordNative) {
         this.row = row;
         this.col = col;
         this.value = value_new;
         this.actionChose = actionChose;
+        this.wordForeign = wordForeign;
+        this.wordNative = wordNative;
         new SendMyData().execute();
     }
 
@@ -93,11 +116,13 @@ public class EditWord extends AppCompatActivity {
         int row = EditWord.this.row;
         String value = EditWord.this.value;
         int actionChose = EditWord.this.actionChose;
+        String wordForeign = EditWord.this.wordForeign;
+        String wordNative = EditWord.this.wordNative;
 
         @Override
         protected String doInBackground(String... strings) {
             try {
-                URL url = new URL("https://script.google.com/macros/s/AKfycbwtqhZb-aMYOAiR69ZdMXehyRfI8nS7stFRduU7JQdEQ0OTevvw_zyp4zPDgxi1EAq4uQ/exec");
+                URL url = new URL(urlSendData);
 //                        "https://script.google.com/macros/s/AKfycbwFAIvRwhMXr3VkLtsWgnJpODv7oQD5kruE1RSABnNrpi1H1qm6QZ-5qj6SE1F5ozzj7w/exec");
                 //
                 JSONObject postDataParams = new JSONObject();
@@ -108,6 +133,8 @@ public class EditWord extends AppCompatActivity {
                 postDataParams.put("rowNum", row);
                 postDataParams.put("colNum", col);
                 postDataParams.put("actionChose", actionChose);
+                postDataParams.put("foreignWord", wordForeign);
+                postDataParams.put("nativeWord", wordNative);
 
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setReadTimeout(15000 /* milliseconds */);
