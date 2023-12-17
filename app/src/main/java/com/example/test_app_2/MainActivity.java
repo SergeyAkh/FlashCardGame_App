@@ -64,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
     private static final String KEY = "myKey";
     private static final String KEY_1 = "myKey_1";
     private static final String KEY_lang = "foreign_lang";
-    public String sheetID = BuildConfig.Sheet_ID;
     String apiKEY = BuildConfig.API_KEY;
     ImageButton main_btn2;
     boolean internetConnection;
