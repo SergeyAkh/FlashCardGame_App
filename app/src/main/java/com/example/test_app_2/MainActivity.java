@@ -201,7 +201,6 @@ public class MainActivity extends AppCompatActivity {
                             }
 
                         } else if (id == R.id.clearAllHistory){
-                            //TODO Clear all history of answers.
                             builder.setTitle("Clear statistics");
                             builder.setMessage("Clear all statistics for whole dictionary.\nAre you sure?");
                             builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
@@ -227,6 +226,33 @@ public class MainActivity extends AppCompatActivity {
                             AlertDialog alert = builder.create();
                             alert.show();
                         }
+//                        else if (id == R.id.changeTable){
+//                            builder.setTitle("Change dictionaries");
+//                            builder.setMessage("This requres you to enter URL  to .\nAre you sure?");
+//                            builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+//                                public void onClick(DialogInterface dialog, int which) {
+//                                    if (!haveNetworkConnection()){
+//                                        showToast("Check Internet Connections");
+//                                    } else {
+//                                        Intent intent = new Intent(MainActivity.this, AddSheetID.class);
+//                                        startActivity(intent);
+//                                        dialog.dismiss();
+//                                    }
+//
+//                                }
+//                            });
+//
+//                            builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+//
+//                                @Override
+//                                public void onClick(DialogInterface dialog, int which) {
+//                                    // Do nothing
+//                                    dialog.dismiss();
+//                                }
+//                            });
+//                            AlertDialog alert = builder.create();
+//                            alert.show();
+//                        }
                         return true;
                     }
                 });
@@ -258,13 +284,12 @@ public class MainActivity extends AppCompatActivity {
 
 
         if (!haveNetworkConnection()) {
-            showToast("Check Internet Connections");
+            showToast("Check Internet Connection");
         } else {
             new GetData().execute();
         }
 
     }
-    //TODO clearAllHistory
     public void clearAllHistory(){
         sendData(1,0,0,2);
         showToast("Data is cleared");

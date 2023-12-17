@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
@@ -75,9 +76,11 @@ public class EditWord extends AppCompatActivity {
                         sendData(row,2,netWordToSend,action,forWordToSend,netWordToSend);
                         foreignNewWord.setText("");
                         nativeNewWord.setText("");
-                        Toast.makeText(EditWord.this, "Word is being changed", Toast.LENGTH_LONG).show();
+                        showToast("Word is being changed");
+//                        Toast.makeText(EditWord.this, "Word is being changed", Toast.LENGTH_LONG).show();
                     } else {
-                        Toast.makeText(EditWord.this, "Please enter new value for word: "+oldForeignWord +" with value: "+oldNativeWord, Toast.LENGTH_LONG).show();
+                        showToast("Please enter new value for word: "+oldForeignWord +" with value: "+oldNativeWord);
+//                        Toast.makeText(EditWord.this, "Please enter new value for word: "+oldForeignWord +" with value: "+oldNativeWord, Toast.LENGTH_LONG).show();
                     }
                 } else {
                     //Action add word
@@ -85,9 +88,11 @@ public class EditWord extends AppCompatActivity {
                         sendData(row,1,forWordToSend,action,forWordToSend,netWordToSend);
                         foreignNewWord.setText("");
                         nativeNewWord.setText("");
-                        Toast.makeText(EditWord.this, "Word is being changed", Toast.LENGTH_LONG).show();
+                        showToast("Word is being added");
+//                        Toast.makeText(EditWord.this, "Word is being changed", Toast.LENGTH_LONG).show();
                     } else {
-                        Toast.makeText(EditWord.this, "Please enter new word", Toast.LENGTH_LONG).show();
+                        showToast("Please enter new word");
+//                        Toast.makeText(EditWord.this, "Please enter new word", Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -100,6 +105,16 @@ public class EditWord extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+    public void showToast(String txt) {
+        View v = View.inflate(this, R.layout.toast_layout, (ViewGroup) findViewById(R.id.toast_layout));
+        TextView text = (TextView) v.findViewById(R.id.textForToast);
+        text.setText(txt);
+        Toast toast = new Toast(EditWord.this);
+        toast.setGravity(Gravity.TOP, 0, 0);
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.setView(v);
+        toast.show();
     }
     private void sendData(int row, int col, String value_new,int actionChose,String wordForeign,String wordNative) {
         this.row = row;

@@ -13,4 +13,5 @@
         android:id="@+id/clearAllHistory"
         android:icon="@drawable/threedots"
         android:title="Clear statistics of answers" />
+
 </menu>
