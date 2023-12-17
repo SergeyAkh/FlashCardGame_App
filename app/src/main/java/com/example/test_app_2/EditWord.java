@@ -63,10 +63,12 @@ public class EditWord extends AppCompatActivity {
         }
         foreignNewWord.setTextSize(20);
         nativeNewWord.setTextSize(20);
-
+        Intent intent;
+        intent = new Intent(EditWord.this, MainActivity.class);
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 forWordToSend = foreignNewWord.getText().toString().trim();
                 netWordToSend = nativeNewWord.getText().toString().trim();
                 if (action==0){
@@ -77,10 +79,9 @@ public class EditWord extends AppCompatActivity {
                         foreignNewWord.setText("");
                         nativeNewWord.setText("");
                         showToast("Word is being changed");
-//                        Toast.makeText(EditWord.this, "Word is being changed", Toast.LENGTH_LONG).show();
+                        startActivity(intent);
                     } else {
                         showToast("Please enter new value for word: "+oldForeignWord +" with value: "+oldNativeWord);
-//                        Toast.makeText(EditWord.this, "Please enter new value for word: "+oldForeignWord +" with value: "+oldNativeWord, Toast.LENGTH_LONG).show();
                     }
                 } else {
                     //Action add word
@@ -89,10 +90,10 @@ public class EditWord extends AppCompatActivity {
                         foreignNewWord.setText("");
                         nativeNewWord.setText("");
                         showToast("Word is being added");
-//                        Toast.makeText(EditWord.this, "Word is being changed", Toast.LENGTH_LONG).show();
+
                     } else {
                         showToast("Please enter new word");
-//                        Toast.makeText(EditWord.this, "Please enter new word", Toast.LENGTH_LONG).show();
+
                     }
                 }
             }
@@ -100,8 +101,6 @@ public class EditWord extends AppCompatActivity {
         backToMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent;
-                intent = new Intent(EditWord.this, MainActivity.class);
                 startActivity(intent);
             }
         });

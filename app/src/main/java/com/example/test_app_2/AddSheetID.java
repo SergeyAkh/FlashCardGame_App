@@ -33,10 +33,13 @@ public class AddSheetID extends AppCompatActivity {
         shtName = findViewById(R.id.oldNativeWord);
         submit = findViewById(R.id.submitNewWords);
         TextView title = (TextView) findViewById (R.id.titleCard);
+        title.setText("Please paste coped your spreadsheet url and \n Sheet Name");
+        shtID.setHint("URL");
+        shtName.setHint("Sheet Name");
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                title.setText("Please paste coped your spreadsheet url and \\n Sheet Name");
+
                 String path = shtID.getText().toString();
                 String sheetName = shtName.getText().toString();
                 if (path.isEmpty()|sheetName.isEmpty()){

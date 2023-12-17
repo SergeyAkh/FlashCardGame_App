@@ -65,8 +65,10 @@ public class MainActivity extends AppCompatActivity {
     private static final String KEY_1 = "myKey_1";
     private static final String KEY_lang = "foreign_lang";
     String apiKEY = BuildConfig.API_KEY;
+    String FOREIGN_LANG_KEY = "LangForeign";
+    String NATIVE_LANG_KEY = "LangNative";
+    String CURRENT_VALUE_WORD = "CurrentPosition";
     ImageButton main_btn2;
-    boolean internetConnection;
     ImageButton switchLang, btnMenu,nxtWord,learnedButton;
     int dictSize = 0, val, wordLength = 0, countAppearance, countRightAnswers, col, row, value, value_sum, langValue,actionChose;
     public String strFWord, strNWord, wordHint, urls, sheetID_1, shtName;
@@ -81,13 +83,20 @@ public class MainActivity extends AppCompatActivity {
     int foreignDict = 0;
     int nativeDict = (foreignDict - 1) * (-1);
     String urlSendData = "https://script.google.com/macros/s/AKfycbxKm3b1SXhf9x2HOalTxwYh1w-xtNFMShsqIWQb_615Ncf1JNGV0e1J7HB9CrWVRU6-Og/exec";
-
-    @SuppressLint("MissingInflatedId")
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        Log.d("my tag","here_2");
+        outState.putString(FOREIGN_LANG_KEY, twTextForeign.getText().toString());
+        outState.putString(NATIVE_LANG_KEY, twTextNative.getText().toString());
+        outState.putInt(CURRENT_VALUE_WORD, val);
+        super.onSaveInstanceState(outState);
+        // call superclass to save any view hierarchy
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
+        setContentView(R.layout.activity_main);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         main_btn2 = findViewById(R.id.btn_answer2);
         switchLang = findViewById(R.id.switchLang);
@@ -99,14 +108,17 @@ public class MainActivity extends AppCompatActivity {
         twTextForeign = findViewById(R.id.textForeign);
         twTextNative = findViewById(R.id.textNative);
         editText = findViewById(R.id.answer);
-        sheetID_1 = loadData(this, KEY);
+        if (savedInstanceState!=null){
+            Log.d("my tag", "here_3");
+        }
+        Log.d("my tag", String.valueOf(savedInstanceState));
         try {
-            langValue = loadData_lang(MainActivity.this, KEY_lang);
-            foreignDict = langValue;
+            foreignDict = loadData_lang(MainActivity.this, KEY_lang);
             nativeDict = (foreignDict - 1) * (-1);
         } catch (Exception e){
 
         }
+        sheetID_1 = loadData(this, KEY);
         shtName = loadData(this, KEY_1);
         //Add first run SheetID and SheetName
 
@@ -227,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
                         }
 //                        else if (id == R.id.changeTable){
 //                            builder.setTitle("Change dictionaries");
-//                            builder.setMessage("This requres you to enter URL  to .\nAre you sure?");
+//                            builder.setMessage("This requires you to enter URL or Sheet Name to new dictionary.\nAre you sure?");
 //                            builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
 //                                public void onClick(DialogInterface dialog, int which) {
 //                                    if (!haveNetworkConnection()){
@@ -255,8 +267,7 @@ public class MainActivity extends AppCompatActivity {
                         return true;
                     }
                 });
-//                MenuInflater inflater = popup.getMenuInflater();
-//                inflater.inflate(R.menu.menu, popup.getMenu());
+
                 popup.show();
 
             }
@@ -280,7 +291,6 @@ public class MainActivity extends AppCompatActivity {
                 doHintAction();
             }
         });
-
 
         if (!haveNetworkConnection()) {
             showToast("Check Internet Connection");
@@ -429,7 +439,6 @@ public class MainActivity extends AppCompatActivity {
         sendData(val, 3, value,0);
         listOfListsOfLists.get(val).set(2, String.valueOf(value));
         listOfListsOfLists.get(val).set(4, String.valueOf(value_sum));
-
     }
 
     public class GetData extends AsyncTask<String, Void, String> {
@@ -516,7 +525,6 @@ public class MainActivity extends AppCompatActivity {
 //                        "https://script.google.com/macros/s/AKfycbwFAIvRwhMXr3VkLtsWgnJpODv7oQD5kruE1RSABnNrpi1H1qm6QZ-5qj6SE1F5ozzj7w/exec");
                 //
                 JSONObject postDataParams = new JSONObject();
-                Log.d("my tag", "row: "+row+"colNum: "+col+"actionChose: "+choseAction);
                 postDataParams.put("values", value);
                 postDataParams.put("shtID", sheetID_1);
                 postDataParams.put("shtName", shtName);
@@ -633,5 +641,6 @@ public class MainActivity extends AppCompatActivity {
         finishAffinity();
         finish();
     }
+
 
 }
