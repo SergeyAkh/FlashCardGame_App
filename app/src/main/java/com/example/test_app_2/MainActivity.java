@@ -23,6 +23,7 @@ import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -275,8 +276,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showToast(String txt){
-        Toast.makeText(getApplicationContext(), txt,
-                Toast.LENGTH_SHORT).show();
+        View v = View.inflate(this, R.layout.toast_layout, (ViewGroup) findViewById(R.id.toast_layout));
+        TextView text = (TextView) v.findViewById(R.id.textForToast);
+        text.setText(txt);
+        Toast toast = new Toast(MainActivity.this);
+        toast.setGravity(Gravity.TOP, 0, 0);
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.setView(v);
+        toast.show();
+
+//        Toast.makeText(getApplicationContext(), txt,
+//                Toast.LENGTH_SHORT).show();
     }
 
     private void doAnswerAction() {
