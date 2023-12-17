@@ -451,7 +451,6 @@ public class MainActivity extends AppCompatActivity {
         listOfListsOfLists.get(val).set(2, String.valueOf(value));
         listOfListsOfLists.get(val).set(4, String.valueOf(value_sum));
     }
-
     public class GetData extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... strings) {
@@ -489,10 +488,7 @@ public class MainActivity extends AppCompatActivity {
                             listOfStrings.add(String.valueOf(countAppearance));
                             listOfStrings.add(String.valueOf(countRightAnswers));
                             listOfStrings.add(String.valueOf(value));
-
                             listOfListsOfLists.add(listOfStrings);
-
-
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
@@ -503,7 +499,17 @@ public class MainActivity extends AppCompatActivity {
                     dictSize = listOfListsOfLists.size();
                     twTextForeign.setText(listLangNames.get(foreignDict));
                     twTextNative.setText(listLangNames.get(nativeDict));
+                    if (dictSize == 0){
+                        Intent intent = new Intent(MainActivity.this, EditWord.class);
+                        Bundle b = new Bundle();
+                        b.putInt("row_num", 0);
+                        b.putString("URL",urlSendData);
+                        b.putInt("action",3);
+                        intent.putExtras(b);
+                        startActivity(intent);
+                    }
                     nextWord(dictSize);
+
                 }
             }, new Response.ErrorListener() {
                 @Override
