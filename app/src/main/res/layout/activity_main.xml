@@ -160,29 +160,33 @@
                     android:textColor="@color/black"
                     android:textSize="40sp"
                     android:textStyle="bold" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="0.7"
                     android:orientation="horizontal">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="50dp"
+                        android:layout_marginLeft="45dp"
                         android:layout_weight="1"
                         android:orientation="vertical">
+
                         <EditText
                             android:id="@+id/answer"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_gravity="center_horizontal"
-                            android:fontFamily="@font/mabry"
                             android:focusable="true"
+                            android:fontFamily="@font/mabry"
                             android:gravity="center"
                             android:hint="Type your answer"
                             android:textColor="@color/black"
                             android:textSize="20sp" />
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -195,18 +199,18 @@
                             android:layout_height="40dp"
                             android:layout_gravity="center"
                             android:layout_marginTop="10dp"
-                            android:layout_marginRight="10dp"
-                            >
+                            android:layout_marginRight="10dp">
+
                             <ImageButton
                                 android:id="@+id/btn_answer2"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:background="@drawable/baseline_send_24"
-                                android:backgroundTint="@color/white"
-                                />
+                                android:backgroundTint="@color/white" />
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
+
                 <TextView
                     android:id="@+id/nativeWord"
                     android:layout_width="match_parent"

@@ -85,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
     String urlSendData = "https://script.google.com/macros/s/AKfycbxKm3b1SXhf9x2HOalTxwYh1w-xtNFMShsqIWQb_615Ncf1JNGV0e1J7HB9CrWVRU6-Og/exec";
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        Log.d("my tag","here_2");
         outState.putString(FOREIGN_LANG_KEY, twTextForeign.getText().toString());
         outState.putString(NATIVE_LANG_KEY, twTextNative.getText().toString());
         outState.putInt(CURRENT_VALUE_WORD, val);
@@ -95,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         main_btn2 = findViewById(R.id.btn_answer2);
@@ -108,10 +106,6 @@ public class MainActivity extends AppCompatActivity {
         twTextForeign = findViewById(R.id.textForeign);
         twTextNative = findViewById(R.id.textNative);
         editText = findViewById(R.id.answer);
-        if (savedInstanceState!=null){
-            Log.d("my tag", "here_3");
-        }
-        Log.d("my tag", String.valueOf(savedInstanceState));
         try {
             foreignDict = loadData_lang(MainActivity.this, KEY_lang);
             nativeDict = (foreignDict - 1) * (-1);
@@ -142,38 +136,43 @@ public class MainActivity extends AppCompatActivity {
         learnedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                builder.setTitle("Learned");
-                builder.setMessage("The word is learned and will be deleted from dictionary.\nAre you sure?");
+                if (!haveNetworkConnection()){
+                    showToast("Check Internet Connections");
+                }else {
+                    builder.setTitle("Learned");
+                    builder.setMessage("The word is learned and will be deleted from dictionary.\nAre you sure?");
 
-                builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (!haveNetworkConnection()){
-                            showToast("Check Internet Connections");
+                    builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            deleteCurrentWord();
+                            nextWord(dictSize);
+                            dialog.dismiss();
                         }
-                        deleteCurrentWord();
-                        nextWord(dictSize);
-                        dialog.dismiss();
-                    }
-                });
+                    });
 
-                builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                    builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Do nothing
-                        dialog.dismiss();
-                    }
-                });
-                AlertDialog alert = builder.create();
-                alert.show();
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Do nothing
+                            dialog.dismiss();
+                        }
+                    });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }
             }
         });
         nxtWord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                nextWordPressed = true;
-                nextWord(dictSize);
-                nextWordPressed = false;
+                if (!haveNetworkConnection()){
+                    showToast("Check Internet Connections");
+                } else {
+                    nextWordPressed = true;
+                    nextWord(dictSize);
+                    nextWordPressed = false;
+                }
             }
         });
         btnMenu.setOnClickListener(new View.OnClickListener() {
@@ -212,28 +211,27 @@ public class MainActivity extends AppCompatActivity {
                             }
 
                         } else if (id == R.id.clearAllHistory){
-                            builder.setTitle("Clear statistics");
-                            builder.setMessage("Clear all statistics for whole dictionary.\nAre you sure?");
-                            builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    if (!haveNetworkConnection()){
-                                        showToast("Check Internet Connections");
-                                    } else {
+                            if (!haveNetworkConnection()){
+                                showToast("Check Internet Connections");
+                            } else {
+                                builder.setTitle("Clear statistics");
+                                builder.setMessage("Clear all statistics for whole dictionary.\nAre you sure?");
+                                builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
                                         clearAllHistory();
                                         dialog.dismiss();
                                     }
+                                });
 
-                                }
-                            });
+                                builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
 
-                            builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // Do nothing
-                                    dialog.dismiss();
-                                }
-                            });
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // Do nothing
+                                        dialog.dismiss();
+                                    }
+                                });
+                            }
                             AlertDialog alert = builder.create();
                             alert.show();
                         }
@@ -276,19 +274,32 @@ public class MainActivity extends AppCompatActivity {
         main_btn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                doAnswerAction();
+                if (!haveNetworkConnection()){
+                    showToast("Check Internet Connections");
+                } else {
+                    doAnswerAction();
+                }
+
             }
         });
         switchLang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                switchLan();
+                if (!haveNetworkConnection()) {
+                    showToast("Check Internet Connections");
+                } else {
+                    switchLan();
+                }
             }
         });
         twNativeWord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                doHintAction();
+                if (!haveNetworkConnection()) {
+                    showToast("Check Internet Connection");
+                } else {
+                    doHintAction();
+                }
             }
         });
 
@@ -301,7 +312,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public void clearAllHistory(){
         sendData(1,0,0,2);
-        showToast("Data is cleared");
+        showToast("History is cleared");
     }
     public void deleteCurrentWord(){
         listOfListsOfLists.remove(val);

@@ -3,6 +3,9 @@ plugins {
 }
 android.buildFeatures.buildConfig true
 android {
+    buildFeatures {
+        viewBinding true
+    }
     namespace 'com.example.test_app_2'
     compileSdk 34
 
