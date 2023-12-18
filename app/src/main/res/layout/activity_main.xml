@@ -121,6 +121,8 @@
                         <ImageButton
                             android:layout_width="50dp"
                             android:id="@+id/btnMenu"
+                            android:elevation="10dp"
+                            android:stateListAnimator="@null"
                             android:src="@drawable/menu"
                             android:background="@drawable/oval"
                             android:layout_marginLeft="20dp"
@@ -138,6 +140,8 @@
                         <ImageButton
                             android:layout_width="50dp"
                             android:id="@+id/btnLearned"
+                            android:elevation="10dp"
+                            android:stateListAnimator="@null"
                             android:src="@drawable/baseline_check_24"
                             android:background="@drawable/oval"
                             android:layout_marginRight="20dp"
@@ -237,6 +241,8 @@
                     <ImageButton
                         android:layout_width="50dp"
                         android:id="@+id/btnNextWord"
+                        android:elevation="10dp"
+                        android:stateListAnimator="@null"
                         android:src="@drawable/baseline_autorenew_24"
                         android:background="@drawable/oval"
                         android:layout_height="50dp">
