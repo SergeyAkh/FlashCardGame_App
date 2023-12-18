@@ -138,7 +138,7 @@
                         <ImageButton
                             android:layout_width="50dp"
                             android:id="@+id/btnLearned"
-                            android:background="@drawable/baseline_check_circle_outline_24"
+                            android:background="@drawable/baseline_check_24"
                             android:layout_marginRight="20dp"
                             android:layout_marginTop="20dp"
                             android:layout_height="50dp">
