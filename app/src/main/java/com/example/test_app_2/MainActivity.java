@@ -75,8 +75,7 @@ public class MainActivity extends AppCompatActivity {
     String FOREIGN_LANG_KEY = "LangForeign";
     String NATIVE_LANG_KEY = "LangNative";
     String CURRENT_VALUE_WORD = "CurrentPosition";
-    ImageButton main_btn2;
-    ImageButton switchLang, btnMenu,nxtWord,learnedButton;
+    ImageButton main_btn2,switchLang, btnMenu,nxtWord,learnedButton;
     int dictSize = 0, val, wordLength = 0, countAppearance, countRightAnswers, col, row, value, value_sum, langValue,actionChose;
     public String strFWord, strNWord, wordHint, urls, sheetID_1, shtName;
     Random rand = new Random();
@@ -315,7 +314,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             new GetData().execute();
         }
-
     }
     public void clearAllHistory(){
         sendData(1,0,0,2);
@@ -391,6 +389,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public int calcSmart(int size){
         int num = 0;
+        Log.d("my tag", String.valueOf(size));
         ArrayList<Integer> wordsToChose = new ArrayList<Integer>();
         int summation = 0;
         int max = Integer.parseInt(listOfListsOfLists.get(0).get(4));
@@ -467,6 +466,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onResponse(JSONObject response) {
                     jsonArray = response.optJSONArray("values");
                     int len = jsonArray.length();
+
                     for (int i = 0; i < len; i++) {
                         List<String> listOfStrings = new ArrayList<String>();
                         try {
@@ -506,17 +506,11 @@ public class MainActivity extends AppCompatActivity {
                     dictSize = listOfListsOfLists.size();
                     twTextForeign.setText(listLangNames.get(foreignDict));
                     twTextNative.setText(listLangNames.get(nativeDict));
-                    if (dictSize == 0){
-                        Intent intent = new Intent(MainActivity.this, EditWord.class);
-                        Bundle b = new Bundle();
-                        b.putInt("row_num", 0);
-                        b.putString("URL",urlSendData);
-                        b.putInt("action",3);
-                        intent.putExtras(b);
-                        startActivity(intent);
+                    if ((dictSize == 0)){
+                        startNewWordAct();
+                    } else {
+                        nextWord(dictSize);
                     }
-                    nextWord(dictSize);
-
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -524,8 +518,21 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
             queue.add(jsonObjectRequest);
+            getDictLength();
             return null;
         }
+        public void getDictLength(){
+            dictSize = listOfListsOfLists.size();
+        }
+    }
+    public void startNewWordAct(){
+        Intent intent = new Intent(MainActivity.this, EditWord.class);
+        Bundle b = new Bundle();
+        b.putInt("row_num", 0);
+        b.putString("URL", urlSendData);
+        b.putInt("action", 3);
+        intent.putExtras(b);
+        startActivity(intent);
     }
 
     private void sendData(int row, int col, int value_new, int actionChose) {

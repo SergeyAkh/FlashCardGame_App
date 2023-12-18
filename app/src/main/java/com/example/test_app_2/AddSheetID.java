@@ -23,7 +23,7 @@ public class AddSheetID extends AppCompatActivity {
     private static final String KEY = "myKey";
     private static final String KEY_1 = "myKey_1";
     String sheetID;
-    ImageButton submit;
+    ImageButton backToMain,submit;
     EditText shtID, shtName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,10 +32,12 @@ public class AddSheetID extends AppCompatActivity {
         shtID = findViewById(R.id.oldForeignWord);
         shtName = findViewById(R.id.oldNativeWord);
         submit = findViewById(R.id.submitNewWords);
+        backToMain = findViewById(R.id.goBack);
         TextView title = (TextView) findViewById (R.id.titleCard);
         title.setText("Please paste coped your spreadsheet url and \n Sheet Name");
         shtID.setHint("URL");
-        shtName.setHint("Sheet Name");
+        shtName.setText("Sheet1");
+        backToMain.setVisibility(View.INVISIBLE);
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -43,7 +45,7 @@ public class AddSheetID extends AppCompatActivity {
                 String path = shtID.getText().toString();
                 String sheetName = shtName.getText().toString();
                 if (path.isEmpty()|sheetName.isEmpty()){
-                    showToast("Please enter ID of Sheet and Name");
+                    showToast("Please enter ID of your Sheet.\nSheet name by default: Sheet1");
                 } else {
                     //loop for looking last "/" and therefore allocate SheetID
                     for (int i=39; i<=path.length();i++){

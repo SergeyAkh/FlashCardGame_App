@@ -35,17 +35,20 @@ public class EditWord extends AppCompatActivity {
 
     int row,col,actionChose,action;
     ImageButton backToMain,submit;
-
+    TextView title;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_word);
+        Log.d("my tag", "here");
         sheetID_1 = MainActivity.loadData(this,KEY);
         shtName = MainActivity.loadData(this,KEY_1);
         submit = findViewById(R.id.submitNewWords);
         backToMain = findViewById(R.id.goBack);
         foreignNewWord = findViewById(R.id.oldForeignWord);
         nativeNewWord = findViewById(R.id.oldNativeWord);
-        TextView title = (TextView) findViewById (R.id.titleCard);
+        title = findViewById (R.id.titleCard);
+        Intent intent;
+        intent = new Intent(EditWord.this, MainActivity.class);
         Bundle b = getIntent().getExtras();
         if (b != null){
             action = b.getInt("action");
@@ -57,14 +60,19 @@ public class EditWord extends AppCompatActivity {
                 foreignNewWord.setText(oldForeignWord);
                 nativeNewWord.setText(oldNativeWord);
                 title.setText("Edit word");
+
             } else{
                 title.setText("Enter new word \n to dictionary");
             }
         }
         foreignNewWord.setTextSize(20);
         nativeNewWord.setTextSize(20);
-        Intent intent;
-        intent = new Intent(EditWord.this, MainActivity.class);
+        backToMain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(intent);
+            }
+        });
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -98,12 +106,12 @@ public class EditWord extends AppCompatActivity {
                 }
             }
         });
-        backToMain.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(intent);
-            }
-        });
+
+    }
+    public void onBackPressed() {
+        super.onBackPressed();
+        finishAffinity();
+        finish();
     }
     public void showToast(String txt) {
         View v = View.inflate(this, R.layout.toast_layout, (ViewGroup) findViewById(R.id.toast_layout));

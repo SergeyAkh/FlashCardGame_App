@@ -119,13 +119,13 @@
                         android:layout_weight="1"
                         android:layout_height="match_parent">
                         <ImageButton
-                            android:layout_width="35dp"
+                            android:layout_width="50dp"
                             android:id="@+id/btnMenu"
-                            android:background="@drawable/menu"
-                            android:backgroundTint="@color/white"
-                            android:layout_marginLeft="30dp"
-                            android:layout_marginTop="23dp"
-                            android:layout_height="35dp"
+                            android:src="@drawable/menu"
+                            android:background="@drawable/oval"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginTop="20dp"
+                            android:layout_height="50dp"
                             app:tint="@color/white">
 
                         </ImageButton>
@@ -138,7 +138,8 @@
                         <ImageButton
                             android:layout_width="50dp"
                             android:id="@+id/btnLearned"
-                            android:background="@drawable/baseline_check_24"
+                            android:src="@drawable/baseline_check_24"
+                            android:background="@drawable/oval"
                             android:layout_marginRight="20dp"
                             android:layout_marginTop="20dp"
                             android:layout_height="50dp">
@@ -232,12 +233,13 @@
                     android:gravity="center"
                     android:layout_weight="0.5"
                     >
+
                     <ImageButton
                         android:layout_width="50dp"
                         android:id="@+id/btnNextWord"
-                        android:background="@drawable/baseline_autorenew_24"
+                        android:src="@drawable/baseline_autorenew_24"
+                        android:background="@drawable/oval"
                         android:layout_height="50dp">
-
                     </ImageButton>
 
                 </LinearLayout>
