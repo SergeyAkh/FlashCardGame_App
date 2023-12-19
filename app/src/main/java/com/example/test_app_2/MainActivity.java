@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (sheetID_1.isEmpty()) {
             Intent intent;
-            intent = new Intent(MainActivity.this, AddSheetID.class);
+            intent = new Intent(MainActivity.this, Slides.class);
             startActivity(intent);
         }
         urls = "https://sheets.googleapis.com/v4/spreadsheets/" + sheetID_1 + "/values/" + shtName + "?key=" + apiKEY;
