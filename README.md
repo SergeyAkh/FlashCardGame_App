@@ -1,16 +1,16 @@
-This is a game that might help to memorize foreign language words by asking to write translation into my native language or vice versa.<br />
-The idea was to help me learn a new language. <br />
+This is a game that might help memorize foreign language words by asking to write translation into native language or vice versa.<br />
+The idea was to help learn a new language. <br />
 
-Advantage of this program is that it shows words based on statistics of combined features: count of apperanse of each word and count of my right answers, the lower these value the more likely word will appere. 
+Advantage of this program is that it shows words based on statistics of combined feature: count of apperanse of each word and count of right answers, the lower these value the more likely word will appeares. 
 <br />
 However, this program has a drawback.
-I had to create my own dictionary in Google Sheets and wright an API requsts, in order to program works. <br />
+It requires a Google Sheets spreadsheet as dictionary. <br />
 
-There were implemented fiatures such as adding new word at the end of the dictionary, and edit current word if I spoted an error. <br />
+There were implemented features such as adding new word at the end of the dictionary, and edit current word if an error where spoted. <br />
 
-If I don't know the word I can use hint field, it can shows me the meaning of the word in my native language spell by letter.<br />
+If I don't know the word I can use hint field, it can shows the meaning of the word in native language letter by letter.<br />
 
-If a word is being learned and I don't want it to be in the dictionary, I can simply delete it.<br />
+If a word where learned and I don't want it to be in the dictionary, I can simply delete it.<br />
 
 And of course there is a opportunity to swap the languages and test my self in a different way.<br />
 
