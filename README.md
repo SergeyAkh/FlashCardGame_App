@@ -1,3 +1,3 @@
-This is the game that might help to memorize you foreign language words by asking you to write a translation on your native language or the other way around.
-The idea was to help me with new word durig my studing new language. I   
+This is the game that might help you memorize foreign language words by asking you to write translation on your native language or the other way around.
+The idea was to help me with learning new language. There is and advantage of program. It shows up the word based on statistics of combined fiature: count of apperanse of each word and count of your right answers. As less thise value than more likely word apperes. There is however disadvantage of this program. You have to create your own dictionary in Google Sheets in order to program works. There were implemented tiatures such as adding new word in the and of the dictionary, and edit current word if you find an error. If you don't know the word you can use hint field, that shows you translation letter by letter.
 ![Screenshot_20240112-184744_Flash Card Game](https://github.com/SergeyAkh/FlashCardGame_App/assets/57836225/3759d724-102b-4915-ba80-440c1f99f083)
