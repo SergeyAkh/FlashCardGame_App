@@ -4,4 +4,5 @@ There is and advantage of program, it shows up the word based on statistics of c
 You have to create your own dictionary in Google Sheets in order to program works. <br />
 
 There were implemented tiatures such as adding new word in the and of the dictionary, and edit current word if you find an error. If you don't know the word you can use hint field, that shows you translation letter by letter.
-![Screenshot_20240112-184744_Flash Card Game](https://github.com/SergeyAkh/FlashCardGame_App/assets/57836225/3759d724-102b-4915-ba80-440c1f99f083)
+
+![Screenshot_20240112-184744_Flash Card Game](https://github.com/SergeyAkh/FlashCardGame_App/assets/57836225/3759d724-102b-4915-ba80-440c1f99f083 | width=100)
