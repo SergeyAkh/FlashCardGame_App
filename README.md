@@ -1,4 +1,4 @@
-This is a game that might help memorize foreign language words by asking to write translation into native language or vice versa.<br />
+This is a game that might help memorize words of foreign language by asking to write translation into native language or vice versa.<br />
 The idea was to help learn a new language. <br />
 
 Advantage of this program is that it shows words based on statistics of combined feature: count of apperanse of each word and count of right answers, the lower these value the more likely word will appeares. 
