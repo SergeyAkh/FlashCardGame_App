@@ -1,7 +1,7 @@
-This is a game that might help me memorize foreign language words by asking to write translation into my native language or vice versa.<br />
+This is a game that might help to memorize foreign language words by asking to write translation into my native language or vice versa.<br />
 The idea was to help me learn a new language. <br />
 
-There is advantage of the program, is that it shows words based on statistics of combined fiature: count of apperanse of each word and count of my right answers, the lower these value the more likely word will appere. 
+Advantage of this program is that it shows words based on statistics of combined features: count of apperanse of each word and count of my right answers, the lower these value the more likely word will appere. 
 <br />
 However, this program has a drawback.
 I had to create my own dictionary in Google Sheets and wright an API requsts, in order to program works. <br />
