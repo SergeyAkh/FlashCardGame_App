@@ -14,6 +14,8 @@ If a word where learned and I don't want it to be in the dictionary, I can simpl
 
 And of course there is a opportunity to swap the languages and test my self in a different way.<br />
 
+There is screenshots below. <br />
+
 <img src="https://github.com/SergeyAkh/FlashCardGame_App/assets/57836225/3759d724-102b-4915-ba80-440c1f99f083" width="200" />
 <br />
 <img src="https://github.com/SergeyAkh/FlashCardGame_App/assets/57836225/e3faa6bf-c5ae-4863-affa-0746bcace11c" width="200" />
